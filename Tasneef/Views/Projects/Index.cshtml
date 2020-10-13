@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Tasneef.Models.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@foreach (var item in Model)
+{
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                @item.Customer.Name
+                <br />
+                <div>Start Date: </div>
+
+                @item.StartDate.ToString("MM/dd/yyyy")
+                <br />
+                @if ((item.ClosedDate != null) && (item.ClosedDate != DateTime.MinValue))
+                {
+                    <div>Close Date:</div>
+                    @item.ClosedDate.ToString("MM/dd/yyyy")
+                }
+
+                <br />
+                @Html.DisplayFor(modelItem => item.Customer.Id)
+                <br />
+                @Html.DisplayFor(modelItem => item.CreatedBy.Id)
+                <br />
+
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+                <br />
+                <br />
+                <br />
+
+                <a class="btn btn-primary waves-effect waves-light" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                <a class="btn btn-warning" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+
+
+            </div>
+        </div>
+        </div>
+        }
+

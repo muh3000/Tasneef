@@ -1,0 +1,142 @@
+﻿@model IEnumerable<Tasneef.Models.Project>
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-12">
+    <div class="card m-b-0">
+        <!-- .chat-row -->
+        <div class="chat-main-box">
+            <!-- .chat-left-panel -->
+            <div class="chat-left-aside">
+                <div class="open-panel"><i class="ti-angle-right"></i></div>
+                <div class="chat-left-inner" style="height: 617px;">
+                    <div class="form-material">
+                        <input class="form-control p-2" type="text" placeholder="Search Contact">
+                    </div>
+                    <ul class="chatonline style-none ps ps--theme_default" data-ps-id="74c86ba9-43d6-6b6e-f09a-c13bc2d1cbb3">
+
+                        @foreach(var item in Model)
+                        {
+
+                            <li>
+                                <a  onclick="display(@item.Id)"> <img src="~/assets/images/users/1.jpg" alt="user-img" class="img-circle"> <span>@item.Name <small class="text-success">@item.Customer.Name</small></span></a>
+                            </li>
+                        }
+                        
+                        
+                        <li class="p-20"></li>
+                        <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div>
+                        <div class="ps__scrollbar-y-rail" style="top: 0px; right: 243px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+                    </ul>
+                </div>
+            </div>
+            <!-- .chat-left-panel -->
+            <!-- .chat-right-panel -->
+            <div class="chat-right-aside">
+                <div class="chat-main-header">
+                    <div class="p-3 b-b">
+                        <h4 class="box-title">Chat Message</h4>
+                    </div>
+                </div>
+                <div class="chat-rbox ps ps--theme_default" data-ps-id="96440269-fb5e-64b6-2fbb-613800efc2d6">
+                    <ul id="chatBoard" class="chat-list p-3" style="height: 437px;">
+                        <!--chat Row -->
+
+                        @foreach (var project in Model)
+                        {
+                            @foreach (var msg in project.Messages) { 
+                        <li>
+                            <div class="chat-img"><img src="~/assets/images/users/1.jpg" alt="user"></div>
+                            <div class="chat-content">
+                                <h5>@msg.CreatedBy==null?"":msg.CreatedBy.Name</h5>
+                                <div class="box bg-light-info">@msg.Body</div>
+                                <div class="chat-time">@msg.CreatedDate</div>
+                            </div>
+                        </li>
+                            }
+                        }
+                    </ul>
+                    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 1377px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+                </div>
+                <div class="card-body border-top">
+                    <div class="row">
+                        <div class="col-8">
+                            <textarea id="MessageBody"  placeholder="Type your message here" class="form-control border-0">eqrewqrw</textarea>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button id="PostMessage" onclick="SendMessage()" type="button" class="btn btn-info btn-circle btn-lg"><i class="fas fa-paper-plane"></i> </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- .chat-right-panel -->
+        </div>
+
+        <!-- /.chat-row -->
+    </div>
+</div>
+<input id="ProjectId" type="hidden" name="ProjectId" />
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+        function display(x) {
+            $.get("/api/MessagesApi/" + x, function (result) {
+                console.log(result);
+                $("#ProjectId").val(x);
+                $("#chatBoard").empty();
+                $("#chatBoard").append("<li><div class=\"chat-img\"><img src=\"/assets/images/users/1.jpg\" alt=\"user\"></div>" +
+                    "<div class=\"chat-content\"><h5>" + "</h5><div class=\"box bg-light-info\">" + result.body
+                    + "</div> <div class=\"chat-time\">" + result.createdDate + "</div></div></div></li>");
+                
+            }).done(function () {
+                //alert("second success");
+            })
+                .fail(function () {
+                    alert("error");
+                })
+                .always(function () {
+                    //alert("finished");
+                });
+
+
+    }
+    function SendMessage() {
+        
+        var projectID = $("#ProjectId").val();
+        alert(projectID);
+        var messageBody = $("#MessageBody").val();
+        alert("OK POST" + projectID + " " + messageBody);
+
+        var message = JSON.stringify(
+            {
+                
+                "ProjectId": projectID,
+                "Body": messageBody
+                
+            });
+        alert(message);
+        $.ajax({
+            url: '/api/MessagesApi/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: message,
+            dataType: 'json'
+            })
+            .done(function () {
+
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Error sending message. "+e );
+            });
+
+
+
+    };
+
+</script>
+}
