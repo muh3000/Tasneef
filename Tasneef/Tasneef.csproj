@@ -1445,7 +1445,9 @@
     <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.bundle.js.map" />
     <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.bundle.min.js" />
     <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
-    <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.js.map" />
     <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.min.js" />
     <None Include="wwwroot\assets\node_modules\bootstrap\dist\js\bootstrap.min.js.map" />
@@ -2370,7 +2372,9 @@
     <None Include="wwwroot\assets\node_modules\jqueryui\jquery-ui.js" />
     <None Include="wwwroot\assets\node_modules\jqueryui\jquery-ui.min.js" />
     <None Include="wwwroot\assets\node_modules\jquery\jquery-3.2.1.min - Copy.js" />
-    <None Include="wwwroot\assets\node_modules\jquery\jquery-3.2.1.min.js" />
+    <None Include="wwwroot\assets\node_modules\jquery\jquery-3.2.1.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\assets\node_modules\jquery\jquery-3.2.1.slim.min.js" />
     <None Include="wwwroot\assets\node_modules\jsgrid\db.js" />
     <None Include="wwwroot\assets\node_modules\jsgrid\i18n\jsgrid-de.js" />
@@ -2533,7 +2537,9 @@
     <None Include="wwwroot\assets\node_modules\perfect-scrollbar\js\perfect-scrollbar.jquery.min.js" />
     <None Include="wwwroot\assets\node_modules\perfect-scrollbar\js\perfect-scrollbar.js" />
     <None Include="wwwroot\assets\node_modules\perfect-scrollbar\js\perfect-scrollbar.min.js" />
-    <None Include="wwwroot\assets\node_modules\popper\popper.min.js" />
+    <None Include="wwwroot\assets\node_modules\popper\popper.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\assets\node_modules\pretify\prettify.js" />
     <None Include="wwwroot\assets\node_modules\prism\prism.js" />
     <None Include="wwwroot\assets\node_modules\raphael\dev\raphael.amd.js" />
@@ -3116,6 +3122,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
@@ -3129,8 +3136,13 @@
   <ItemGroup>
     <Folder Include="Pages\" />
     <Folder Include="wwwroot\css\" />
-    <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\assets\icons\crypto-icons\cryptocoins.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

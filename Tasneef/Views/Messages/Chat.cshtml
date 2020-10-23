@@ -16,13 +16,13 @@
                     <div class="form-material">
                         <input class="form-control p-2" type="text" placeholder="Search Contact">
                     </div>
-                    <ul class="chatonline style-none ps ps--theme_default" data-ps-id="74c86ba9-43d6-6b6e-f09a-c13bc2d1cbb3">
+                    <ul class="chatonline style-none ps ps--theme_default" data-ps-id="74c86ba9-43d6-6b6e-f09a-c13bc2d1cbb3" style="overflow: scroll;">
 
                         @foreach(var item in Model)
                         {
 
                             <li>
-                                <a  onclick="display(@item.Id)"> <img src="~/assets/images/users/1.jpg" alt="user-img" class="img-circle"> <span>@item.Name <small class="text-success">@item.Customer.Name</small></span></a>
+                                <a  onclick="display(@item.Id)">  <span>@item.Name <small class="text-success">@item.Customer.Name</small></span></a>
                             </li>
                         }
                         
@@ -42,29 +42,17 @@
                     </div>
                 </div>
                 <div class="chat-rbox ps ps--theme_default" data-ps-id="96440269-fb5e-64b6-2fbb-613800efc2d6">
-                    <ul id="chatBoard" class="chat-list p-3" style="height: 437px;">
+                    <ul id="chatBoard" class="chat-list p-3" style="height: 437px;overflow-x: hidden;overflow-y: auto; ">
                         <!--chat Row -->
 
-                        @foreach (var project in Model)
-                        {
-                            @foreach (var msg in project.Messages) { 
-                        <li>
-                            <div class="chat-img"><img src="~/assets/images/users/1.jpg" alt="user"></div>
-                            <div class="chat-content">
-                                <h5>@msg.CreatedBy==null?"":msg.CreatedBy.Name</h5>
-                                <div class="box bg-light-info">@msg.Body</div>
-                                <div class="chat-time">@msg.CreatedDate</div>
-                            </div>
-                        </li>
-                            }
-                        }
+                        
                     </ul>
                     <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: 1377px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
                 </div>
                 <div class="card-body border-top">
                     <div class="row">
                         <div class="col-8">
-                            <textarea id="MessageBody"  placeholder="Type your message here" class="form-control border-0">eqrewqrw</textarea>
+                            <textarea id="MessageBody"  placeholder="Type your message here" class="form-control border-0">tEST mESSAGE</textarea>
                         </div>
                         <div class="col-4 text-right">
                             <button id="PostMessage" onclick="SendMessage()" type="button" class="btn btn-info btn-circle btn-lg"><i class="fas fa-paper-plane"></i> </button>
@@ -88,15 +76,30 @@
                 console.log(result);
                 $("#ProjectId").val(x);
                 $("#chatBoard").empty();
-                $("#chatBoard").append("<li><div class=\"chat-img\"><img src=\"/assets/images/users/1.jpg\" alt=\"user\"></div>" +
-                    "<div class=\"chat-content\"><h5>" + "</h5><div class=\"box bg-light-info\">" + result.body
-                    + "</div> <div class=\"chat-time\">" + result.createdDate + "</div></div></div></li>");
+                //var i = 0;
+                for (var item in result) {
+                    var user = result[item].createdBy;
+                    console.log(user);
+                    var userName = "";
+                    if (user != null) {
+                        userName = user.name;
+                    }
+                    //i++;
+                    //alert(i);
+                    AppendMessage(result[item].body, result[item].createdDate, userName);
+                    //setTimeout('', i * 300);
+                }
+                
+                //$("#chatBoard").append("<li><div class=\"chat-img\"><img src=\"/assets/images/users/1.jpg\" alt=\"user\"></div>" +
+                    //"<div class=\"chat-content\"><h5>" + "</h5><div class=\"box bg-light-info\">" + result.body
+                    //+ "</div> <div class=\"chat-time\">" + result.createdDate + "</div></div></div></li>");
                 
             }).done(function () {
                 //alert("second success");
             })
-                .fail(function () {
-                    alert("error");
+                .fail(function (e) {
+                    console.log(e);
+                    alert("Error");
                 })
                 .always(function () {
                     //alert("finished");
@@ -104,22 +107,34 @@
 
 
     }
+    function AppendMessage(body, createdDate, nameOfUser) {
+        
+            $("#chatBoard").append("<li><div class=\"chat-img\"></div>" +
+                "<div class=\"chat-content\"><h5>" + "</h5><div class=\"box bg-light-info\">" + body.replace(/\r?\n/g, '<br/>') + "<hr />" + nameOfUser
+                + "</div> <div class=\"chat-time\">" + createdDate + "</div></div></div></li>");
+            scrollToBottom();
+        
+        
+
+        
+        
+    }
     function SendMessage() {
         
         var projectID = $("#ProjectId").val();
-        alert(projectID);
+        //alert(projectID);
         var messageBody = $("#MessageBody").val();
-        alert("OK POST" + projectID + " " + messageBody);
+        //alert("OK POST" + projectID + " " + messageBody);
 
         var message = JSON.stringify(
             {
 
                 
-                "ProjectId": projectID,
+                "ProjectId": parseInt(projectID,10),
                 "Body": messageBody
                 
             });
-        alert(message);
+        //alert(message);
         $.ajax({
             url: '/api/MessagesApi/',
             type: 'POST',
@@ -128,7 +143,10 @@
             dataType: 'json'
             })
             .done(function () {
+                var now = new Date();
 
+                AppendMessage(messageBody, now.toLocaleTimeString(), "Me");
+                $("#MessageBody").val("");
             })
             .fail(function (e) {
                 console.log(e);
@@ -138,6 +156,11 @@
 
 
     };
+
+    function scrollToBottom() {
+        var objDiv = document.getElementById("chatBoard");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
 
 </script>
 }

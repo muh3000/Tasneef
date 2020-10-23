@@ -11,7 +11,7 @@ using Tasneef.Models;
 
 namespace Tasneef.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize]
     public class LogoutModel : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;
@@ -23,8 +23,10 @@ namespace Tasneef.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)

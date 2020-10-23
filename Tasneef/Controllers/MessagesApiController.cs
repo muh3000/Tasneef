@@ -14,7 +14,7 @@ namespace Tasneef.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class MessagesApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -26,26 +26,30 @@ namespace Tasneef.Controllers
         }
 
         // GET: api/MessagesApi
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Message>>> GetMessages(int ProjectId)
-        {
-            return await _context.Messages.Include(m=>m.CreatedBy).Include(m=>m.Project).Where(m=>m.ProjectId == ProjectId).ToListAsync();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<Message>> GetMessage(int id)
+        //{
+        //    var message = await _context.Messages.FindAsync(id);
+
+        //    if (message == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return message;
+            
+        //}
 
         
 
         // GET: api/MessagesApi/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Message>> GetMessage(int id)
+        public async Task<ActionResult<IEnumerable<Message>>> GetMessages(int id)
         {
-            var message = await _context.Messages.FindAsync(id);
-
-            if (message == null)
-            {
-                return NotFound();
-            }
-
-            return message;
+            var x = await _context.AppUsers.ToListAsync();
+            List<Message> messages = await _context.Messages.Include(m => m.CreatedBy).Where(m => m.ProjectId == id).ToListAsync();
+            var xd = x.Count;
+            return messages;
         }
 
         // PUT: api/MessagesApi/5
