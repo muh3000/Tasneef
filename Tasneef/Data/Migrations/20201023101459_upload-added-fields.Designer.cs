@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tasneef.Data;
 
 namespace Tasneef.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201023101459_upload-added-fields")]
+    partial class uploadaddedfields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -410,9 +412,6 @@ namespace Tasneef.Data.Migrations
 
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsForm")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("MessageId")
                         .HasColumnType("int");
