@@ -13,6 +13,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Tasneef.Models;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
 
 namespace Tasneef
 {
@@ -45,7 +49,32 @@ namespace Tasneef
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
             services.AddRazorPages();
-            services.AddMvc().AddRazorRuntimeCompilation();
+
+            services.AddLocalization(opts => {
+                opts.ResourcesPath = "Resources";
+
+
+            });
+            services.AddMvc()
+                .AddRazorRuntimeCompilation()
+                .AddViewLocalization(opts => { opts.ResourcesPath = "Resources"; })
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
+
+            services.Configure<RequestLocalizationOptions>(opts => {
+                var supportedCultures = new List<CultureInfo> {
+                    new CultureInfo("en"),
+                    new CultureInfo("ar"),   // Arabic Egypt
+                  };
+
+                opts.DefaultRequestCulture = new RequestCulture("ar");
+                // Formatting numbers, dates, etc.
+                opts.SupportedCultures = supportedCultures;
+                // UI strings that we have localized.
+                opts.SupportedUICultures = supportedCultures;
+            });
+
+
 
         }
 
@@ -65,6 +94,10 @@ namespace Tasneef
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(options.Value);
+
+            app.UseCookiePolicy();
 
             app.UseRouting();
 

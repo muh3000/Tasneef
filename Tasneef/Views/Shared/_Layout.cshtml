@@ -1,5 +1,18 @@
-﻿<!DOCTYPE html>
-<html lang="en"dir="rtl" >
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>
+    ();
+    string lang = requestCulture.RequestCulture.UICulture.Name;
+    string dir = "ltr";
+    if (lang == "ar")
+        dir = "rtl";
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="@dir">
 
 <head>
     <meta charset="utf-8">
@@ -39,16 +52,16 @@
                             <!-- Dark Logo icon -->
                             <h3>مكتب التصنيف</h3>
                             @*<img src="~/images/logo-site.png" alt="homepage" class="dark-logo" />
-                            <!-- Light Logo icon -->
-                            <img src="~/images/logo-site.png" alt="homepage" class="light-logo" style="width:150px;" />*@
+                                <!-- Light Logo icon -->
+                                <img src="~/images/logo-site.png" alt="homepage" class="light-logo" style="width:150px;" />*@
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text --><span>
-    <!-- dark Logo text -->
-    @*<img src="~/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
-        <!-- Light Logo text -->
-        <img src="~/assets/images/logo-light-text.png" class="light-logo" alt="homepage" />*@
-</span>
+                            <!-- dark Logo text -->
+                            @*<img src="~/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                                <!-- Light Logo text -->
+                                <img src="~/assets/images/logo-light-text.png" class="light-logo" alt="homepage" />*@
+                        </span>
                     </a>
                 </div>
                 <div class="navbar-collapse">
@@ -62,8 +75,6 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav my-lg-0">
-
-
                     </ul>
                 </div>
             </nav>
@@ -76,26 +87,31 @@
                         <partial name="_LoginPartial" />
                         <li>
                             <a class="waves-effect waves-dark" asp-area="" asp-controller="Home" asp-action="Index" aria-expanded="false">
-                            <i class="icon-speedometer"></i><span class="hide-menu">الرئسية</span></a>
+                                <i class="icon-speedometer"></i><span class="hide-menu">الرئسية</span>
+                            </a>
                         </li>
                         <li>
-                            <a class="waves-effect waves-dark" sp-area="" >
+                            <a class="waves-effect waves-dark" sp-area="">
                                 <i class="icon-user"></i>
                                 <span class="hide-menu">
-                                    العملاء</span>
+                                    العملاء
+                                </span>
                             </a>
                             <ul aria-expanded="false" class="collapse">
-                                <li><a asp-area="" asp-controller="Customers" asp-action="Index">
-                                    <i class="icons-Bulleted-List"></i>
-                                    <span class="hide-menu">
-                                        قائمة العملاء</span>
+                                <li>
+                                    <a asp-area="" asp-controller="Customers" asp-action="Index">
+                                        <i class="icons-Bulleted-List"></i>
+                                        <span class="hide-menu">
+                                            قائمة العملاء
+                                        </span>
                                     </a>
                                 </li>
-                                <li><a asp-area="" asp-controller="Customers" asp-action="Create">
+                                <li>
+                                    <a asp-area="" asp-controller="Customers" asp-action="Create">
                                         <i class="icons-Add"></i>
-                                    <span class="hide-menu">
+                                        <span class="hide-menu">
                                             إنشاء عميل
-                                            </span>
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
@@ -152,13 +168,15 @@
                         </li>
                         <li>
                             <a class="waves-effect waves-dark" asp-area="" asp-controller="Messages" asp-action="Chat">
-                            <i class="icons-Mail"></i>
-                            <span class="hide-menu">
-                                Messages</span></a>
+                                <i class="icons-Mail"></i>
+                                <span class="hide-menu">
+                                    Messages
+                                </span>
+                            </a>
                         </li>
 
                         <li>
-                            <a class="waves-effect waves-dark" >
+                            <a class="waves-effect waves-dark">
                                 <i class="icons-Gears"></i>
                                 <span class="hide-menu">
                                     الإعدادات
@@ -189,9 +207,12 @@
 
 
 
-                        <li> <a class="waves-effect waves-dark" asp-area="Identity" asp-page="/Account/Logout"  aria-expanded="false">
-                            <i class="far fa-circle text-success"></i>
-                            <span class="hide-menu">Log Out</span></a></li>
+                        <li>
+                            <a class="waves-effect waves-dark" asp-area="Identity" asp-page="/Account/Logout" aria-expanded="false">
+                                <i class="far fa-circle text-success"></i>
+                                <span class="hide-menu">Log Out</span>
+                            </a>
+                        </li>
 
                     </ul>
                 </nav>
@@ -228,6 +249,12 @@
         <footer class="footer">
             <div class="container">
                 &copy; 2020 - Tasneef - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-6 text-right">
+                    @await Html.PartialAsync("_SelectLanguagePartial")
+                </div>
             </div>
         </footer>
     </div>

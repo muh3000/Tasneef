@@ -7,21 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tasneef.Data;
 using Tasneef.Models;
-
+using Microsoft.Extensions.Localization;
 namespace Tasneef.Controllers
 {
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public CustomersController(ApplicationDbContext context)
+        private readonly IStringLocalizer<CustomersController> _localizer;
+        public CustomersController(ApplicationDbContext context, IStringLocalizer<CustomersController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         // GET: Customers
         public async Task<IActionResult> Index()
         {
+            ViewData["ss"] = _localizer["About Title"]; ;
             return View(await _context.Customers.ToListAsync());
         }
 

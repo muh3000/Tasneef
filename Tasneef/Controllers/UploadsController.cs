@@ -46,11 +46,27 @@ namespace Tasneef.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadFile(int id,IFormFile file)
         {
-            
-            string folderName = "Uploads";
+            var fileSaveName = await UploadFileAsync(file, "Uploads");
+            Upload upload = await _context.Uploads.FindAsync(id);
+            upload.UpdatedById = _userID;
+            upload.UpdatedDate = DateTime.Now;
+            upload.FilePath = fileSaveName;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
+
+
+            return View(nameof(UploadForm),new { id = id });
+        }
+
+        public async Task<string> UploadFileAsync(IFormFile file,string DestFolder)
+        {
+            string fileSaveName = "";
+            //string folderName = DestFolder;
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string uploadFolder = Path.Combine(webRootPath, folderName);
-            
+            string uploadFolder = Path.Combine(webRootPath, DestFolder);
+
             if (!Directory.Exists(uploadFolder))
             {
                 Directory.CreateDirectory(uploadFolder);
@@ -60,9 +76,10 @@ namespace Tasneef.Controllers
                 string sFileExtension = Path.GetExtension(file.FileName).ToLower();
                 Random rand = new Random();
                 string fullPath = "";
-                string fileSaveName = "";
-                while (true) {
-                    fileSaveName = Path.GetRandomFileName() + "." + sFileExtension;
+
+                while (true)
+                {
+                    fileSaveName = rand.Next(1000000,10000000).ToString() + sFileExtension;
                     fullPath = Path.Combine(uploadFolder, fileSaveName);
                     if (!System.IO.File.Exists(fullPath))
                     {
@@ -73,27 +90,16 @@ namespace Tasneef.Controllers
                 //var stream = System.IO.File.Create(fullPath)
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                    if (id == null)
-                    {
-                        return NotFound();
-                    }
-                    await file.CopyToAsync(stream);
                     
-                    //stream.Close();
-                    Upload upload = await _context.Uploads.FindAsync(id);
-                    upload.UpdatedById = _userID;
-                    upload.UpdatedDate = DateTime.Now;
-                    upload.FilePath = fileSaveName;
-                    await _context.SaveChangesAsync();
+                    await file.CopyToAsync(stream);
 
-                    return RedirectToAction(nameof(Index));
+
+
 
                 }
             }
-            
-            
-            
-            return View(nameof(UploadForm),new { id = id });
+            return fileSaveName;
+
         }
         // GET: Uploads/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -134,12 +140,15 @@ namespace Tasneef.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,MessageId,ProjectId,CustomerId,FilePath,Tag,CreatedById,CreatedDate,UpdatedById,UpdatedDate")] Upload upload)
+        public async Task<IActionResult> Create(Upload upload,IFormFile file)
         {
+            //var savedFileName = "";
+            var savedFileName = await UploadFileAsync(file, "Uploads") ;
             if (ModelState.IsValid)
             {
                 upload.CreatedById = _userID;
                 upload.CreatedDate = DateTime.Now;
+                upload.FilePath = savedFileName;
                 _context.Add(upload);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
