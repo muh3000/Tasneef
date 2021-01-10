@@ -19,5 +19,8 @@ namespace Tasneef.Models
         public int? SubscriptionId { set; get; }
         public Subscription Subscription { set; get; }
 
+        public int MemoId { set; get; }
+        public Memo Memo { set; get; }
+
     }
 }

@@ -126,11 +126,20 @@
   <data name="Customers" xml:space="preserve">
     <value>العملاء</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>تفاصيل</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>تحرير</value>
+  </data>
   <data name="Language:" xml:space="preserve">
     <value>Language:</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>الاسم</value>
+    <value>الإسم</value>
   </data>
   <data name="Updated By" xml:space="preserve">
     <value>المحدث</value>

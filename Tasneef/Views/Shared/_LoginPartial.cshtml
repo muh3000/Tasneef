@@ -1,24 +1,25 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+@inject IHtmlLocalizer<SharedResource> Localizer
 
-    
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <li>
-                <a class="waves-effect waves-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                    <i class="icon-settings"></i>
-                    <span class="hide-menu">
-                        إعدادات المستخدم
-                        </span>
+@if (SignInManager.IsSignedIn(User))
+{
+    <li>
+        <a class="waves-effect waves-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <i class="icon-settings"></i>
+            <span class="hide-menu">
+                @Localizer["Profile"]
+            </span>
 
-                </a>
-            </li>
-           
-
-            
+        </a>
+    </li>
 
 
-        }
-        
-    
+
+
+
+}
+
+

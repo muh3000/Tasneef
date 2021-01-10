@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<Tasneef.ViewModels.AppUserVM>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = Localizer.GetString("Users");
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,77 +11,59 @@
     <div class="card">
 
         <div class="card-body">
-            <h4 class="card-title">Customers List</h4>
+            <h4 class="card-title">
+                @Localizer.GetString("Users List")
+            </h4>
 
-            
-                <table class="table">
-                    <thead>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Localizer.GetString("Name")
+                        </th>
+                        <th>
+                            @Localizer.GetString("Username")
+                        </th>
+                        <th>
+                            @Localizer.GetString("Customer")
+                        </th>
+
+
+                        <th>
+                            @Localizer.GetString("Role")
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
                         <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CustomerId)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CustomerName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Username)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Password)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Mobile)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.RoleId)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.RoleName)
-                            </th>
-                            <th></th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CustomerName)
+                            </td>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RoleName)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">@Localizer.GetString("Edit")</a> |
+
+                                <a asp-action="Delete" asp-route-id="@item.Id">@Localizer.GetString("Delete")</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CustomerId)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CustomerName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Username)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Password)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Mobile)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.RoleId)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.RoleName)
-                                </td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            
-            </div>
-</div>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
 </div>

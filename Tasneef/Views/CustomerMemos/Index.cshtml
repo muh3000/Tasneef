@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Tasneef.Models.CustomerMemo>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-12">
+    <div class="card">
+
+        <div class="card-body">
+            <h4 class="card-title">Customer Memeo List</h4>
+
+            <p>
+                <a asp-action="Create">Create New</a>
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Customer)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsRead)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ReadDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Subscription)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Memo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedBy)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UpdatedBy)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UpdatedDate)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Customer.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsRead)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReadDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Subscription.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Memo.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedBy.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UpdatedBy.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UpdatedDate)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

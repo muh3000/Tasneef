@@ -1,0 +1,64 @@
+﻿@model Tasneef.Models.Memo
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-12">
+    <div class="card">
+
+        <div class="card-body">
+            <h4 class="card-title">Create Memo</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="CreateCustomerMemos">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Body" class="control-label"></label>
+                            <input asp-for="Body" class="form-control" />
+                            <span asp-validation-for="Body" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CreatedById" class="control-label"></label>
+                            <select asp-for="CreatedById" class="form-control" asp-items="ViewBag.CreatedById"></select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CreatedDate" class="control-label"></label>
+                            <input asp-for="CreatedDate" class="form-control" />
+                            <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label">Customers</label>
+                            @*<select name="customersList" multiple class="form-control" asp-items="ViewBag.Customers"></select>*@
+
+                            @Html.ListBox("customersList", (MultiSelectList)ViewBag.Customers)
+                        </div>
+
+
+                        <div class="form-group">
+                            <label asp-for="UpdatedDate" class="control-label"></label>
+                            <input asp-for="UpdatedDate" class="form-control" />
+                            <span asp-validation-for="UpdatedDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+
+        </div>
+    </div>
+</div>

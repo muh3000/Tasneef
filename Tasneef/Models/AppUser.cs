@@ -14,10 +14,8 @@ namespace Tasneef.Models
         public string Name { set; get; }
 
         public bool Active { set; get; }
-        //[ForeignKey("Customer")]
-        public int? CustomerId { set; get; }
 
-        [NotMapped]
-        public Customer Customer { set; get; }
+
+        
     }
 }

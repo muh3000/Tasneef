@@ -2,6 +2,10 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
+
+
+@inject IHtmlLocalizer<SharedResource> Localizer
+
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>
     ();
@@ -50,7 +54,7 @@
                         <!-- Logo icon --><b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <h3>مكتب التصنيف</h3>
+                            <h3>@Localizer["Tasneef"]</h3>
                             @*<img src="~/images/logo-site.png" alt="homepage" class="dark-logo" />
                                 <!-- Light Logo icon -->
                                 <img src="~/images/logo-site.png" alt="homepage" class="light-logo" style="width:150px;" />*@
@@ -87,14 +91,14 @@
                         <partial name="_LoginPartial" />
                         <li>
                             <a class="waves-effect waves-dark" asp-area="" asp-controller="Home" asp-action="Index" aria-expanded="false">
-                                <i class="icon-speedometer"></i><span class="hide-menu">الرئسية</span>
+                                <i class="icon-speedometer"></i><span class="hide-menu">@Localizer.GetString("Home")</span>
                             </a>
                         </li>
                         <li>
                             <a class="waves-effect waves-dark" sp-area="">
                                 <i class="icon-user"></i>
                                 <span class="hide-menu">
-                                    العملاء
+                                    @Localizer.GetString("Customers")
                                 </span>
                             </a>
                             <ul aria-expanded="false" class="collapse">
@@ -102,7 +106,7 @@
                                     <a asp-area="" asp-controller="Customers" asp-action="Index">
                                         <i class="icons-Bulleted-List"></i>
                                         <span class="hide-menu">
-                                            قائمة العملاء
+                                            @Localizer.GetString("Customers List")
                                         </span>
                                     </a>
                                 </li>
@@ -110,16 +114,16 @@
                                     <a asp-area="" asp-controller="Customers" asp-action="Create">
                                         <i class="icons-Add"></i>
                                         <span class="hide-menu">
-                                            إنشاء عميل
+                                            @Localizer.GetString("Create Customer")
                                         </span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a class="waves-effect waves-dark" asp-area="" asp-controller="Users" asp-action="Index">
+                            <a class="waves-effect waves-dark" >
                                 <i class="icon-user"></i>
-                                <span class="hide-menu">Users</span>
+                                <span class="hide-menu">@Localizer.GetString("Users")</span>
                             </a>
 
                             <ul aria-expanded="false" class="collapse">
@@ -127,7 +131,7 @@
                                     <a asp-area="" asp-controller="Users" asp-action="Index">
                                         <i class="icons-Bulleted-List"></i>
                                         <span class="hide-menu">
-                                            قائمة المستخدمين
+                                            @Localizer.GetString("Users List")
                                         </span>
                                     </a>
                                 </li>
@@ -135,23 +139,23 @@
                                     <a asp-area="" asp-controller="Users" asp-action="Create">
                                         <i class="icons-Add-User"></i>
                                         <span class="hide-menu">
-                                            إنشاء مستخدم
+                                            @Localizer.GetString("Create User")
                                         </span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a class="waves-effect waves-dark" asp-area="" asp-controller="Projects" asp-action="Index">
+                            <a class="waves-effect waves-dark" >
                                 <i class="icons-Project"></i>
-                                <span class="hide-menu">المشاريع</span>
+                                <span class="hide-menu">@Localizer.GetString("Projects")</span>
                             </a>
                             <ul aria-expanded="false" class="collapse">
                                 <li>
                                     <a asp-area="" asp-controller="Projects" asp-action="Index">
                                         <i class="icons-Bulleted-List"></i>
                                         <span class="hide-menu">
-                                            قائمة المشاريع
+                                            @Localizer.GetString("Projects List")
                                         </span>
                                     </a>
                                 </li>
@@ -159,7 +163,7 @@
                                     <a asp-area="" asp-controller="Projects" asp-action="Create">
                                         <i class="icons-Add-Window"></i>
                                         <span class="hide-menu">
-                                            إنشاء مشروع
+                                            @Localizer.GetString("Create Project")
                                         </span>
                                     </a>
                                 </li>
@@ -170,7 +174,7 @@
                             <a class="waves-effect waves-dark" asp-area="" asp-controller="Messages" asp-action="Chat">
                                 <i class="icons-Mail"></i>
                                 <span class="hide-menu">
-                                    Messages
+                                    @Localizer.GetString("Messages")
                                 </span>
                             </a>
                         </li>
@@ -179,7 +183,7 @@
                             <a class="waves-effect waves-dark">
                                 <i class="icons-Gears"></i>
                                 <span class="hide-menu">
-                                    الإعدادات
+                                    @Localizer.GetString("Settings")
                                 </span>
                             </a>
                             <ul aria-expanded="false" class="collapse">
@@ -187,7 +191,7 @@
                                     <a asp-area="" asp-controller="ProjectStatus" asp-action="Index">
                                         <i class="icon-list"></i>
                                         <span class="hide-menu">
-                                            حالات المشروع
+                                            @Localizer.GetString("Project Status")
                                         </span>
                                     </a>
                                 </li>
@@ -198,19 +202,67 @@
                             <a class="waves-effect waves-dark" asp-area="" asp-controller="Uploads" asp-action="Index">
                                 <i class="icons-Upload-toCloud"></i>
                                 <span class="hide-menu">
-                                    Uploads
+                                    @Localizer.GetString("Uploads")
                                 </span>
                             </a>
                         </li>
 
 
+                        <li>
+                            <a class="waves-effect waves-dark" asp-area="" asp-controller="Subscriptions" asp-action="Index">
+                                <i class="icons-Upload-toCloud"></i>
+                                <span class="hide-menu">
+                                    @Localizer.GetString("Subscriptions")
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="waves-effect waves-dark">
+                                <i class="icons-Upload-toCloud"></i>
+                                <span class="hide-menu">
+                                    @Localizer.GetString("Memos")
+                                </span>
+                            </a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li>
+                                    <a asp-area="" asp-controller="Memos" asp-action="Index">
+                                        <i class="icons-Bulleted-List"></i>
+                                        <span class="hide-menu">
+                                            @Localizer.GetString("Memos List")
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="waves-effect waves-dark" asp-area="" asp-controller="CustomerMemos" asp-action="Index">
+                                        <i class="icons-Upload-toCloud"></i>
+                                        <span class="hide-menu">
+                                            @Localizer.GetString("Customer Memos")
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="waves-effect waves-dark" asp-area="" asp-controller="Memos" asp-action="CreateCustomerMemos">
+                                        <i class="icons-Upload-toCloud"></i>
+                                        <span class="hide-menu">
+                                            @Localizer.GetString("Create Customer Memos")
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
 
+                        </li>
 
 
                         <li>
+                            <a class="waves-effect waves-dark" asp-area="Identity" asp-controller="AuditTrails" asp-action="Index">
+                                <i class="far fa-circle text-success"></i>
+                                <span class="hide-menu">@Localizer.GetString("Audit Trails")</span>
+                            </a>
+                        </li>
+                        <li>
                             <a class="waves-effect waves-dark" asp-area="Identity" asp-page="/Account/Logout" aria-expanded="false">
                                 <i class="far fa-circle text-success"></i>
-                                <span class="hide-menu">Log Out</span>
+                                <span class="hide-menu">@Localizer.GetString("Log Out")</span>
                             </a>
                         </li>
 
@@ -227,7 +279,7 @@
                     <div class="col-md-7 align-self-center text-right">
                         <div class="d-flex justify-content-end align-items-center">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0)">@Localizer.GetString("Home")</a></li>
                                 <li class="breadcrumb-item active">@ViewBag.Title</li>
                             </ol>
 
@@ -248,7 +300,7 @@
         </div>
         <footer class="footer">
             <div class="container">
-                &copy; 2020 - Tasneef - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                &copy; @DateTime.Now.Year - @Localizer.GetString("Tasneef") - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer.GetString("Privacy")</a>
             </div>
             <div class="row">
 

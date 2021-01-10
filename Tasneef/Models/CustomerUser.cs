@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace Tasneef.Models
 {
-    public class CustomerUser:AuditableEntity
+    public class CustomerUser
     {
         public int Id { set; get; }
         public int CustomerId { set; get; }
+        public Customer Customer { set; get; }
         public string UserId { set; get; }
         public AppUser User { set; get; } 
 

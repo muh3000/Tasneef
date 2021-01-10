@@ -9,12 +9,16 @@ namespace Tasneef.Models
     {
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime ClosedDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
 
         public int CustomerId { set; get; }
         public Customer Customer { set; get; }
         public ICollection<Message> Messages { get; set; }
         public string Name { set; get; }
+
+        public int ProjectStatusId { set; get; }
+        public ProjectStatus ProjectStatus { set; get; }
+
 
     }
 }

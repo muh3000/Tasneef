@@ -59,7 +59,7 @@ namespace Tasneef.Controllers
         {
             
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
-            
+            ViewData["ProjectStatusId"] = new SelectList(_context.ProjectStatuses, "Id", "Name");
             return View();
         }
 
@@ -79,7 +79,7 @@ namespace Tasneef.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", project.CustomerId);
-            
+            ViewData["ProjectStatusId"] = new SelectList(_context.ProjectStatuses, "Id", "Name", project.ProjectStatusId);
             return View(project);
         }
 
@@ -98,7 +98,7 @@ namespace Tasneef.Controllers
             }
             
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", project.CustomerId);
-            
+            ViewData["ProjectStatusId"] = new SelectList(_context.ProjectStatuses, "Id", "Name", project.ProjectStatusId);
             return View(project);
         }
 
@@ -138,7 +138,7 @@ namespace Tasneef.Controllers
             }
             
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", project.CustomerId);
-            
+            ViewData["ProjectStatusId"] = new SelectList(_context.ProjectStatuses, "Id", "Name", project.ProjectStatusId);
             return View(project);
         }
 

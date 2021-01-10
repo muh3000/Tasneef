@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<Tasneef.Models.Customer>
 @using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 
 @{
     ViewData["Title"] = Localizer.GetString("Customers");
-    
+
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="col-12">
@@ -19,47 +19,25 @@
                         <th>
                             @Localizer.GetString("Name")
                         </th>
-                        <th>
-                            @Localizer.GetString("Created By")
-                        </th>
-                        <th>
-                            @Localizer.GetString("Created Date")
-                        </th>
-                        <th>
-                            @Localizer.GetString("Updated By")
-                        </th>
-                        <th>
-                            @Localizer.GetString("Updated Date")
-                        </th>
+
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
-                        {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedById)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdatedById)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdatedDate)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                        }
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">@Localizer.GetString("Edit")</a> |
+
+                                <a asp-action="Delete" asp-route-id="@item.Id">@Localizer.GetString("Delete")</a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

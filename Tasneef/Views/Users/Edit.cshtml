@@ -1,70 +1,69 @@
 ﻿@model Tasneef.ViewModels.AppUserVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = @Localizer.GetString("Edit");
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="col-12">
+    <div class="card">
 
-<h1>Edit</h1>
+        <div class="card-body">
+            <h4 class="card-title">@Localizer.GetString("Edit User")</h4>
 
-<h4>AppUserVM</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label">@Localizer.GetString("Name")</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CustomerId" class="control-label">@Localizer.GetString("Customer")</label>
+                            <select asp-for="CustomerId" asp-items="ViewBag.Customers" class="form-control"></select>
+                            <span asp-validation-for="CustomerId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Username" class="control-label">@Localizer.GetString("Username")</label>
+                            <input asp-for="Username" class="form-control" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label">@Localizer.GetString("Password")</label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Mobile" class="control-label">@Localizer.GetString("Mobile")</label>
+                            <input asp-for="Mobile" class="form-control" />
+                            <span asp-validation-for="Mobile" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RoleId" class="control-label">@Localizer.GetString("Role")</label>
+                            <input asp-for="RoleId" class="form-control" />
+                            <span asp-validation-for="RoleId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="@Localizer.GetString("Save")" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <input asp-for="CustomerId" class="form-control" />
-                <span asp-validation-for="CustomerId" class="text-danger"></span>
+
+            <div>
+                <a asp-action="Index">@Localizer.GetString("Back to List")</a>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerName" class="control-label"></label>
-                <input asp-for="CustomerName" class="form-control" />
-                <span asp-validation-for="CustomerName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Mobile" class="control-label"></label>
-                <input asp-for="Mobile" class="form-control" />
-                <span asp-validation-for="Mobile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoleId" class="control-label"></label>
-                <input asp-for="RoleId" class="form-control" />
-                <span asp-validation-for="RoleId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RoleName" class="control-label"></label>
-                <input asp-for="RoleName" class="form-control" />
-                <span asp-validation-for="RoleName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

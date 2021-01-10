@@ -39,17 +39,19 @@ namespace Tasneef.Controllers
                     Id= user.Id,
                     Name = user.Name,
                     Username = user.UserName,
-                    CustomerId = user.CustomerId,
+//                    CustomerId = user.CustomerId,
+                    //CustomerName = (await _context.Customers.FindAsync(user.CustomerId))?.Name,
 
                 });
                 
             }
-            foreach(var item in usersList)
+            foreach(var item in usersVMList)
             {
-                Customer cust = await _context.Customers.FirstOrDefaultAsync(c => c.Id == item.CustomerId);
-                if (cust != null)
+                CustomerUser custUser = await _context.CustomerUsers.Include(c=>c.Customer).FirstOrDefaultAsync(c => c.UserId == item.Id);
+                if (custUser != null)
                 {
-                    item.Customer = cust;
+                    item.CustomerId = custUser.CustomerId;
+                    item.CustomerName = custUser.Customer.Name;
                 }
             }
 
@@ -65,27 +67,35 @@ namespace Tasneef.Controllers
                 return NotFound();
             }
 
-            AppUser user = await _userManager.Users.FirstOrDefaultAsync(u=>u.Id == id);
-            
+            AppUser user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+
             if (user == null)
             {
                 return NotFound();
             }
-
+            Customer cust = await GetCustomerByUser(id);
             var appUserVM = new AppUserVM()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Username = user.UserName,
-                CustomerId = user.CustomerId,
+                CustomerId = cust?.Id,
+                CustomerName = cust?.Name,
+                Mobile = user.PhoneNumber
 
             };
 
-               
-            
+
+
 
             return View(appUserVM);
         }
+
+        private async Task<Customer> GetCustomerByUser(string id)
+        {
+            return (await _context.CustomerUsers.Include(c => c.Customer).FirstOrDefaultAsync(c => c.UserId == id))?.Customer;
+        }
+
 
         // GET: Users/Create
         public IActionResult Create()
@@ -108,13 +118,15 @@ namespace Tasneef.Controllers
                     Name = appUserVM.Name,
                     UserName = appUserVM.Username,
                     Email = appUserVM.Username,
-                    NormalizedEmail = appUserVM.Username.ToUpper()
+                    NormalizedEmail = appUserVM.Username.ToUpper(),
+                    PhoneNumber = appUserVM.Mobile
 
                     
                 };
 
                 await _userManager.CreateAsync(newUser, appUserVM.Password);
-
+                appUserVM.Id = newUser.Id;
+                await UpdateCustomerUser(appUserVM);
                 return RedirectToAction(nameof(Details),new { id = newUser.Id});
             }
             return View(appUserVM);
@@ -134,19 +146,23 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
-
+            Customer cust = await GetCustomerByUser(id);
             var appUserVM = new AppUserVM()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Username = user.UserName,
-                CustomerId = user.CustomerId,
+                CustomerId = cust?.Id,
+                Mobile = user.PhoneNumber
+
 
             };
             if (appUserVM == null)
             {
                 return NotFound();
             }
+            ViewData["Customers"] = new SelectList(_context.Customers, "Id", "Name",cust?.Id);
+
             return View(appUserVM);
         }
 
@@ -166,8 +182,20 @@ namespace Tasneef.Controllers
             {
                 try
                 {
-                    _context.Update(appUserVM);
-                    await _context.SaveChangesAsync();
+                    AppUser user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+                    user.Name = appUserVM.Name;
+
+                    user.PhoneNumber = appUserVM.Mobile;
+                    if (appUserVM.Password != null)
+                    {
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        await _userManager.ResetPasswordAsync(user, token, appUserVM.Password);
+                    }
+                    await UpdateCustomerUser( appUserVM);
+                    await _userManager.UpdateAsync(user);
+
+                    //_context.Update(appUserVM);
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -185,6 +213,37 @@ namespace Tasneef.Controllers
             return View(appUserVM);
         }
 
+        private async Task UpdateCustomerUser( AppUserVM appUserVM)
+        {
+            var customerUser = await _context.CustomerUsers.FirstOrDefaultAsync(c => c.UserId == appUserVM.Id);
+            if (appUserVM.CustomerId != null)
+            {
+                
+                if (customerUser != null)
+                {
+                    customerUser.CustomerId = (int)appUserVM.CustomerId;
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    CustomerUser newCustUser = new CustomerUser();
+                    newCustUser.CustomerId = appUserVM.CustomerId.Value;
+                    newCustUser.UserId = appUserVM.Id;
+                    await _context.CustomerUsers.AddAsync(newCustUser);
+                    
+                }
+
+            }
+            else
+            {
+                if(customerUser!= null)
+                {
+                    _context.CustomerUsers.Remove(customerUser);
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
@@ -199,13 +258,14 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
-
+            Customer cust = await GetCustomerByUser(id);
             var appUserVM = new AppUserVM()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Username = user.UserName,
-                CustomerId = user.CustomerId,
+                CustomerId = cust?.Id,
+                CustomerName = cust?.Name
 
             };
             if (appUserVM == null)

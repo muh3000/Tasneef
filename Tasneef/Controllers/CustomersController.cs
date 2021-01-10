@@ -99,7 +99,9 @@ namespace Tasneef.Controllers
             {
                 try
                 {
-                    _context.Update(customer);
+                    var dbcustomer = await _context.Customers.FindAsync(customer.Id);
+                    dbcustomer.Name = customer.Name;
+                    _context.Update(dbcustomer);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

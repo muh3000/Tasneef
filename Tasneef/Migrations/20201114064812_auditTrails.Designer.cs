@@ -7,17 +7,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tasneef.Data;
 
-namespace Tasneef.Data.Migrations
+namespace Tasneef.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201023101459_upload-added-fields")]
-    partial class uploadaddedfields
+    [Migration("20201114064812_auditTrails")]
+    partial class auditTrails
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -245,6 +245,41 @@ namespace Tasneef.Data.Migrations
                     b.ToTable("AppSettings");
                 });
 
+            modelBuilder.Entity("Tasneef.Models.AuditTrail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AuditDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AuditType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AuditUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChangedColumn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("KeyValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditTrails");
+                });
+
             modelBuilder.Entity("Tasneef.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -252,22 +287,43 @@ namespace Tasneef.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedById1")
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("Tasneef.Models.CustomerMemo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MemoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReadDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("SubscriptionId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UpdatedById")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedById1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -275,11 +331,73 @@ namespace Tasneef.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById1");
+                    b.HasIndex("CreatedById");
 
-                    b.HasIndex("UpdatedById1");
+                    b.HasIndex("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.HasIndex("MemoId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("CustomerMemos");
+                });
+
+            modelBuilder.Entity("Tasneef.Models.CustomerUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CustomerUsers");
+                });
+
+            modelBuilder.Entity("Tasneef.Models.Memo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("Memos");
                 });
 
             modelBuilder.Entity("Tasneef.Models.Message", b =>
@@ -325,7 +443,7 @@ namespace Tasneef.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("ClosedDate")
+                    b.Property<DateTime?>("ClosedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedById")
@@ -339,6 +457,9 @@ namespace Tasneef.Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProjectStatusId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -354,6 +475,8 @@ namespace Tasneef.Data.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProjectStatusId");
 
                     b.HasIndex("UpdatedById");
 
@@ -394,6 +517,43 @@ namespace Tasneef.Data.Migrations
                     b.ToTable("ProjectStatuses");
                 });
 
+            modelBuilder.Entity("Tasneef.Models.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("Tasneef.Models.Upload", b =>
                 {
                     b.Property<int>("Id")
@@ -412,6 +572,9 @@ namespace Tasneef.Data.Migrations
 
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsForm")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("MessageId")
                         .HasColumnType("int");
@@ -450,13 +613,8 @@ namespace Tasneef.Data.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });
@@ -512,15 +670,55 @@ namespace Tasneef.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tasneef.Models.Customer", b =>
+            modelBuilder.Entity("Tasneef.Models.CustomerMemo", b =>
                 {
                     b.HasOne("Tasneef.Models.AppUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById1");
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Tasneef.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tasneef.Models.Memo", "Memo")
+                        .WithMany()
+                        .HasForeignKey("MemoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tasneef.Models.Subscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionId");
 
                     b.HasOne("Tasneef.Models.AppUser", "UpdatedBy")
                         .WithMany()
-                        .HasForeignKey("UpdatedById1");
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Tasneef.Models.CustomerUser", b =>
+                {
+                    b.HasOne("Tasneef.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tasneef.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Tasneef.Models.Memo", b =>
+                {
+                    b.HasOne("Tasneef.Models.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Tasneef.Models.AppUser", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Tasneef.Models.Message", b =>
@@ -552,12 +750,29 @@ namespace Tasneef.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Tasneef.Models.ProjectStatus", "ProjectStatus")
+                        .WithMany()
+                        .HasForeignKey("ProjectStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Tasneef.Models.AppUser", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
                 });
 
             modelBuilder.Entity("Tasneef.Models.ProjectStatus", b =>
+                {
+                    b.HasOne("Tasneef.Models.AppUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("Tasneef.Models.AppUser", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+                });
+
+            modelBuilder.Entity("Tasneef.Models.Subscription", b =>
                 {
                     b.HasOne("Tasneef.Models.AppUser", "CreatedBy")
                         .WithMany()
@@ -589,13 +804,6 @@ namespace Tasneef.Data.Migrations
                     b.HasOne("Tasneef.Models.AppUser", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById");
-                });
-
-            modelBuilder.Entity("Tasneef.Models.AppUser", b =>
-                {
-                    b.HasOne("Tasneef.Models.Customer", null)
-                        .WithMany("Users")
-                        .HasForeignKey("CustomerId");
                 });
 #pragma warning restore 612, 618
         }

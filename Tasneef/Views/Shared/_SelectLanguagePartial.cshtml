@@ -8,12 +8,16 @@
 @inject IOptions<RequestLocalizationOptions> LocOptions
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-    var cultureItems = LocOptions.Value.SupportedUICultures
-        .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
-        .ToList();
+    var cultureItems = new List<SelectListItem>() { new SelectListItem { Value = "ar", Text = "العربية" },
+        new SelectListItem { Value = "en", Text = "English" } };
+
+
+    //LocOptions.Value.SupportedUICultures
+    //.Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+    //.ToList();
 }
 
-<div title="@Localizer["Request culture provider:"] @requestCulture?.Provider?.GetType().Name">
+@*<div title="@Localizer["Request culture provider:"] @requestCulture?.Provider?.GetType().Name">*@
     <form id="selectLanguage" asp-controller="Home"
           asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path"
           method="post" class="form-horizontal" role="form">
@@ -22,4 +26,4 @@
         
 
     </form>
-</div>
+@*</div>*@
