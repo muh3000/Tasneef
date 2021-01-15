@@ -15,6 +15,8 @@
             <div class="card-body">
                 @Localizer["Project"]: @item.Name
                 <br />
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+                <br />
                 <div>@Localizer["Start Date"] </div>
 
                 @item.StartDate.ToString("MM/dd/yyyy")
@@ -25,15 +27,9 @@
                     @item.ClosedDate?.ToString("MM/dd/yyyy")
                 }
 
-                <br />
-                @Html.DisplayFor(modelItem => item.Customer.Name)
-                <br />
+            <br /><br />
 
 
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-                <br />
-                <br />
-                <br />
 
                 <a class="btn btn-primary waves-effect waves-light" asp-action="Edit" asp-route-id="@item.Id">@Localizer["Edit"]</a>
 

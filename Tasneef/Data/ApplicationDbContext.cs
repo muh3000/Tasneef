@@ -143,7 +143,7 @@ namespace Tasneef.Data
                                 {
 
 
-                                    audit.NewValue = property.OriginalValue.ToString();
+                                    audit.NewValue = property.OriginalValue?.ToString();
                                     audit.OldValue = property.CurrentValue.ToString();
 
                                     if (audit.NewValue == audit.OldValue)

@@ -12,5 +12,6 @@ namespace Tasneef.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
+        public Customer Customer { set; get; }
     }
 }

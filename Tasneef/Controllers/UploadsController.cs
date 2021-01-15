@@ -46,11 +46,21 @@ namespace Tasneef.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadFile(int id,IFormFile file)
         {
-            var fileSaveName = await UploadFileAsync(file, "Uploads");
+
+            
             Upload upload = await _context.Uploads.FindAsync(id);
+            
+            if (file != null)
+            {
+                DeleteFile(upload.FilePath, "Uploads");
+                upload.FilePath = "";
+                string savedFileName = await UploadFileAsync(file, "Uploads");
+                upload.FilePath = savedFileName;
+
+            }
             upload.UpdatedById = _userID;
             upload.UpdatedDate = DateTime.Now;
-            upload.FilePath = fileSaveName;
+            
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -143,12 +153,19 @@ namespace Tasneef.Controllers
         public async Task<IActionResult> Create(Upload upload,IFormFile file)
         {
             //var savedFileName = "";
-            var savedFileName = await UploadFileAsync(file, "Uploads") ;
+            string savedFileName = "";
+            if (file!= null)
+                savedFileName = await UploadFileAsync(file, "Uploads") ;
             if (ModelState.IsValid)
             {
                 upload.CreatedById = _userID;
                 upload.CreatedDate = DateTime.Now;
                 upload.FilePath = savedFileName;
+                if (upload.IsForm)
+                {
+                    upload.CustomerId = null;
+                    upload.ProjectId = null;
+                }
                 _context.Add(upload);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -187,7 +204,7 @@ namespace Tasneef.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MessageId,ProjectId,CustomerId,FilePath,Tag,CreatedById,CreatedDate,UpdatedById,UpdatedDate")] Upload upload)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MessageId,ProjectId,CustomerId,FilePath,Tag,CreatedById,CreatedDate,UpdatedById,UpdatedDate")] Upload upload,IFormFile file)
         {
             if (id != upload.Id)
             {
@@ -198,7 +215,29 @@ namespace Tasneef.Controllers
             {
                 try
                 {
-                    _context.Update(upload);
+                    Upload uploaddb = await _context.Uploads.FindAsync(upload.Id);
+                    uploaddb.IsForm = upload.IsForm;
+                    if (upload.IsForm)
+                    {
+                        uploaddb.CustomerId = null;
+                        uploaddb.ProjectId = null;
+                    }
+                    else
+                    {
+                        uploaddb.CustomerId = upload.CustomerId;
+                        uploaddb.ProjectId = upload.ProjectId;
+                    }
+                    uploaddb.Tag = upload.Tag;
+                    if(file != null)
+                    {
+                        DeleteFile(uploaddb.FilePath, "Uploads");
+                        uploaddb.FilePath = "";
+                        string savedFileName = await UploadFileAsync(file, "Uploads");
+                        uploaddb.FilePath = savedFileName;
+                        
+                    }
+
+                    _context.Update(uploaddb);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -251,6 +290,10 @@ namespace Tasneef.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var upload = await _context.Uploads.FindAsync(id);
+            if (upload.FilePath.Length > 0)
+            {
+                DeleteFile(upload.FilePath, "Uploads");
+            }
             _context.Uploads.Remove(upload);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -260,5 +303,40 @@ namespace Tasneef.Controllers
         {
             return _context.Uploads.Any(e => e.Id == id);
         }
+
+        public void DeleteFile(string FileName,string DestFolder)
+        {
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            string uploadFolder = Path.Combine(webRootPath, DestFolder);
+            string fullPath = Path.Combine(uploadFolder, FileName);
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+
+            }
+
+        }
     }
 }
+/*
+ 
+
+            if (!Directory.Exists(uploadFolder))
+            {
+                Directory.CreateDirectory(uploadFolder);
+            }
+            if (file.Length > 0)
+            {
+                string sFileExtension = Path.GetExtension(file.FileName).ToLower();
+                Random rand = new Random();
+                string fullPath = "";
+
+                while (true)
+                {
+                    fileSaveName = rand.Next(1000000,10000000).ToString() + sFileExtension;
+                    fullPath = Path.Combine(uploadFolder, fileSaveName);
+                    if (!System.IO.File.Exists(fullPath))
+                    {
+                        break;
+
+                    }*/

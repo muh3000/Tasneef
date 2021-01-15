@@ -1,14 +1,16 @@
 ﻿@model Tasneef.Models.ProjectStatus
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = Localizer["Edit"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="col-12">
     <div class="card">
 
         <div class="card-body">
-            <h4 class="card-title">Edit Project Status</h4>
+            <h4 class="card-title">@Localizer["Project Status"]</h4>
 
 
             <div class="row">
@@ -17,45 +19,26 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="Id" />
                         <div class="form-group">
-                            <label asp-for="Name" class="control-label"></label>
+                            <label asp-for="Name" class="control-label">@Localizer["Name"]</label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
+</div>
                         <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="Removable" /> @Html.DisplayNameFor(model => model.Removable)
-                            </label>
+                            
+                                <input class="form-check-input" asp-for="Removable" /> 
+                                <label class="form-check-label">@Localizer["Removable"]</label>
                         </div>
+                        
                         <div class="form-group">
-                            <label asp-for="CreatedById" class="control-label"></label>
-                            <select asp-for="CreatedById" class="form-control" asp-items="ViewBag.CreatedById"></select>
-                            <span asp-validation-for="CreatedById" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="CreatedDate" class="control-label"></label>
-                            <input asp-for="CreatedDate" class="form-control" />
-                            <span asp-validation-for="CreatedDate" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="UpdatedById" class="control-label"></label>
-                            <select asp-for="UpdatedById" class="form-control" asp-items="ViewBag.UpdatedById"></select>
-                            <span asp-validation-for="UpdatedById" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="UpdatedDate" class="control-label"></label>
-                            <input asp-for="UpdatedDate" class="form-control" />
-                            <span asp-validation-for="UpdatedDate" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <input type="submit" value="@Localizer["Save"]" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>
             </div>
 
             <div>
-                <a asp-action="Index">Back to List</a>
-            </div>
+                <a asp-action="Index">@Localizer["Back to List"]</a>
+</div>
         </div>
     </div>
 </div>

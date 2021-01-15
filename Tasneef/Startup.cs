@@ -17,6 +17,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
+using Tasneef.Utilities;
 
 namespace Tasneef
 {
@@ -64,12 +65,13 @@ namespace Tasneef
             services.Configure<RequestLocalizationOptions>(opts => {
                 var supportedCultures = new List<CultureInfo> {
                     new CultureInfo("en"),
-                    new CultureInfo("ar"),   // Arabic Egypt
+                    new CustomArCulture("ar",false),   // Arabic Egypt
                   };
 
                 opts.DefaultRequestCulture = new RequestCulture("ar");
                 // Formatting numbers, dates, etc.
                 opts.SupportedCultures = supportedCultures;
+                
                 // UI strings that we have localized.
                 opts.SupportedUICultures = supportedCultures;
             });

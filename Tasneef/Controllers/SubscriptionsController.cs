@@ -22,7 +22,7 @@ namespace Tasneef.Controllers
         // GET: Subscriptions
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Subscriptions.Include(s => s.CreatedBy).Include(s => s.UpdatedBy);
+            var applicationDbContext = _context.Subscriptions.Include(s => s.Customer);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -49,8 +49,7 @@ namespace Tasneef.Controllers
         // GET: Subscriptions/Create
         public IActionResult Create()
         {
-            ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id");
-            ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id");
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
             return View();
         }
 
@@ -85,8 +84,7 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", subscription.CreatedById);
-            ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id", subscription.UpdatedById);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
             return View(subscription);
         }
 
@@ -122,8 +120,7 @@ namespace Tasneef.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", subscription.CreatedById);
-            ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id", subscription.UpdatedById);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
             return View(subscription);
         }
 

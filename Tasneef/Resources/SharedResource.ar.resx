@@ -126,6 +126,9 @@
   <data name="Back to List" xml:space="preserve">
     <value>العودة إلى القائمة</value>
   </data>
+  <data name="Chat Message" xml:space="preserve">
+    <value>المحادثة</value>
+  </data>
   <data name="Close Date" xml:space="preserve">
     <value>تاريخ الإغلاق</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="Create Customer Memos" xml:space="preserve">
     <value>إنشاء تعميم للعملاء</value>
+  </data>
+  <data name="Create New" xml:space="preserve">
+    <value>إنشاء جديد</value>
   </data>
   <data name="Create new Customer" xml:space="preserve">
     <value>إنشاء عميل جديد</value>
@@ -183,6 +189,9 @@
   <data name="Details" xml:space="preserve">
     <value>تفاصيل</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>تنزيل</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>تحرير</value>
   </data>
@@ -192,11 +201,23 @@
   <data name="Edit Project" xml:space="preserve">
     <value>تحرير مشروع</value>
   </data>
+  <data name="Edit Upload" xml:space="preserve">
+    <value>تعديل التحميل</value>
+  </data>
   <data name="Edit User" xml:space="preserve">
     <value>تحرير المستخدم</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>البريد الإلكتروني</value>
+  </data>
+  <data name="End Date" xml:space="preserve">
+    <value>لغاية</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>الملف</value>
+  </data>
+  <data name="Form?" xml:space="preserve">
+    <value>نموذج؟</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>الرئيسية</value>
@@ -240,11 +261,17 @@
   <data name="Projects List" xml:space="preserve">
     <value>قائمة المشاريع</value>
   </data>
+  <data name="Removable" xml:space="preserve">
+    <value>قابل للحذف</value>
+  </data>
   <data name="Role" xml:space="preserve">
     <value>الوظيفة</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>حفظ</value>
+  </data>
+  <data name="Select File" xml:space="preserve">
+    <value>اختر الملف</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>الإعدادات</value>
@@ -255,8 +282,14 @@
   <data name="Status" xml:space="preserve">
     <value>الحالة</value>
   </data>
+  <data name="Subscription" xml:space="preserve">
+    <value>إشتراك</value>
+  </data>
   <data name="Subscriptions" xml:space="preserve">
     <value>الإشتراكات</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>وسم</value>
   </data>
   <data name="Tasneef" xml:space="preserve">
     <value>التصنيف</value>
@@ -267,8 +300,20 @@
   <data name="Updated Date" xml:space="preserve">
     <value>تاريخ التحديث</value>
   </data>
+  <data name="Upload" xml:space="preserve">
+    <value>تحميل</value>
+  </data>
+  <data name="Upload Form" xml:space="preserve">
+    <value>نموذج التحميل</value>
+  </data>
+  <data name="Uploading File" xml:space="preserve">
+    <value>تحميل ملف</value>
+  </data>
   <data name="Uploads" xml:space="preserve">
     <value>الملفات</value>
+  </data>
+  <data name="Uploads List" xml:space="preserve">
+    <value>قائمة التحميل</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>اسم المستخدم</value>
@@ -278,5 +323,8 @@
   </data>
   <data name="Users List" xml:space="preserve">
     <value>قائمة المستخدمين</value>
+  </data>
+  <data name="Write message here" xml:space="preserve">
+    <value>اكتب النص هنا</value>
   </data>
 </root>

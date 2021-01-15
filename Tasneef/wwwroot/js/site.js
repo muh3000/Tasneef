@@ -2,3 +2,19 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+function isForm() {
+    var isform = $("#IsForm").prop("checked");
+    console.log(isform);
+    if (isform) {
+        $("#customer").hide();
+        $("#project").hide();
+    }
+    else {
+        $("#customer").show();
+        $("#project").show();
+    }
+
+
+
+}
+

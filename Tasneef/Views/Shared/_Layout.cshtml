@@ -199,12 +199,34 @@
                         </li>
 
                         <li>
-                            <a class="waves-effect waves-dark" asp-area="" asp-controller="Uploads" asp-action="Index">
+                            <a class="waves-effect waves-dark" >
                                 <i class="icons-Upload-toCloud"></i>
                                 <span class="hide-menu">
                                     @Localizer.GetString("Uploads")
                                 </span>
                             </a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li>
+                                    <a asp-area="" asp-controller="Uploads" asp-action="Index">
+                                        <i class="icon-list"></i>
+                                        <span class="hide-menu">
+                                            @Localizer.GetString("Uploads List")
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-area="" asp-controller="Uploads" asp-action="Create">
+                                        <i class="icon-list"></i>
+                                        <span class="hide-menu">
+                                            @Localizer.GetString("Create")
+                                        </span>
+                                    </a>
+                                </li>
+                                
+
+                            </ul>
+
+
                         </li>
 
 

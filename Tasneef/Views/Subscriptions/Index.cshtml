@@ -1,43 +1,33 @@
 ﻿@model IEnumerable<Tasneef.Models.Subscription>
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = Localizer["Subscriptions"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="col-12">
     <div class="card">
 
         <div class="card-body">
-            <h4 class="card-title">Subscription List</h4>
+            <h4 class="card-title">@Localizer["Subscriptions"]</h4>
 
 
             <p>
-                <a asp-action="Create">Create New</a>
+                <a asp-action="Create">@Localizer["Create New"]</a>
             </p>
             <table class="table">
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.CustomerId)
+                            @Localizer["Customer"]
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.StartDate)
+                            @Localizer["Start Date"]
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.EndDate)
+                            @Localizer["End Date"]
                         </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CreatedBy)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CreatedDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UpdatedBy)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UpdatedDate)
-                        </th>
+                        
                         <th></th>
                     </tr>
                 </thead>
@@ -46,7 +36,7 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.CustomerId)
+                                @Html.DisplayFor(modelItem => item.Customer.Name)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.StartDate)
@@ -54,22 +44,11 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.EndDate)
                             </td>
+                            
                             <td>
-                                @Html.DisplayFor(modelItem => item.CreatedBy.Id)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CreatedDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UpdatedBy.Id)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UpdatedDate)
-                            </td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                <a asp-action="Edit" asp-route-id="@item.Id">@Localizer["Edit"]</a> |
+                                
+                                <a asp-action="Delete" asp-route-id="@item.Id">@Localizer["Delete"]</a>
                             </td>
                         </tr>
                     }
