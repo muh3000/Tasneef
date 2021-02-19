@@ -1,78 +1,84 @@
 ﻿@model IEnumerable<Tasneef.Models.AuditTrail>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = Localizer["Index"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
-<p>
-    
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AuditDateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AuditType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AuditUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TableName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KeyValues)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OldValue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NewValue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChangedColumn)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuditDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuditType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuditUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TableName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KeyValues)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OldValue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NewValue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangedColumn)
-            </td>
-            <td>
-                
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="col-12">
+    <div class="card">
+
+        <div class="card-body">
+            <h4 class="card-title">@Localizer["Audit Trails"]</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Localizer["Change Date"]
+                        </th>
+                        <th>
+                            @Localizer["Change Type"]
+                        </th>
+                        <th>
+                            @Localizer["User"]
+                        </th>
+                        <th>
+                            @Localizer["Model"]
+                        </th>
+                        <th>
+                            @Localizer["Key Value"]
+                        </th>
+                        <th>
+                            @Localizer["Field"]
+                        </th>
+                        <th>
+                            @Localizer["Old Value"]
+                        </th>
+                        <th>
+                            @Localizer["New Value"]
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AuditDateTime)
+                        </td>
+                        <td>
+                            @Localizer[item.AuditType ?? ""]
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AuditUser)
+                        </td>
+                        <td>
+                            @Localizer[item.TableName ?? ""]
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.KeyValues)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ChangedColumn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OldValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewValue)
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>

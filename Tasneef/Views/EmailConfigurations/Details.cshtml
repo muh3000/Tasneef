@@ -1,0 +1,61 @@
+﻿@model Tasneef.Models.EmailConfiguration
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>EmailConfiguration</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FromEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FromEmail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SenderName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SenderName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SMTPUername)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SMTPUername)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SMTPPassword)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SMTPPassword)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SMTPServer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SMTPServer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SMTPPort)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SMTPPort)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EnableSSL)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EnableSSL)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

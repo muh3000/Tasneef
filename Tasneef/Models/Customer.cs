@@ -11,7 +11,7 @@ namespace Tasneef.Models
         public string  Name { get; set; }
 
         
-
-        
+        public List<Subscription> Subscriptions { set; get; }
+        public List<CustomerUser> CustomerUsers { set; get; }
     }
 }

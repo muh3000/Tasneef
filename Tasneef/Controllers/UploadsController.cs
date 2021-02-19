@@ -32,7 +32,13 @@ namespace Tasneef.Controllers
         // GET: Uploads
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Uploads.Include(u => u.CreatedBy).Include(u => u.Customer).Include(u => u.Message).Include(u => u.Project).Include(u => u.UpdatedBy);
+            var applicationDbContext = _context.Uploads
+                .Include(u => u.CreatedBy)
+                .Include(u => u.Customer)
+                .Include(u => u.Message)
+                .Include(u => u.Project)
+                .Include(u => u.UpdatedBy);
+                //.Where(u=>u.CustomerId);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -140,7 +146,7 @@ namespace Tasneef.Controllers
             ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Name");
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
             ViewData["MessageId"] = new SelectList(_context.Messages, "Id", "Id");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            ViewData["ProjectId"] = new SelectList(_context.Projects.Where(p=>p.ProjectStatusId == 1 ), "Id", "Name");
             ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Name");
             return View();
         }

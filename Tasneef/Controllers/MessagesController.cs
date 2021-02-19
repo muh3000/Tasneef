@@ -30,7 +30,7 @@ namespace Tasneef.Controllers
 
         public async Task<IActionResult> Chat()
         {
-            var projects = await _context.Projects.Include(p=>p.Messages).Include(p=>p.Customer).Include(p=>p.CreatedBy).ToListAsync<Project>();
+            var projects = await _context.Projects.Where(p=> p.ProjectStatusId == 1 ).Include(p=>p.Messages).Include(p=>p.Customer).Include(p=>p.CreatedBy).ToListAsync<Project>();
             return View(projects);
         }
 

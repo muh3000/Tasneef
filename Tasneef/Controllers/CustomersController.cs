@@ -8,8 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Tasneef.Data;
 using Tasneef.Models;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Tasneef.Controllers
 {
+    [Authorize(Roles = "Admin,Manager")]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;

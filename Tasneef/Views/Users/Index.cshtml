@@ -52,7 +52,7 @@
 
 
                             <td>
-                                @Html.DisplayFor(modelItem => item.RoleName)
+                                @Localizer.GetString(item.RoleName??"")
                             </td>
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.Id">@Localizer.GetString("Edit")</a> |

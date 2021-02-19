@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Tasneef
+@inject IHtmlLocalizer<SharedResource> Localizer
+@{
     if (ViewData.TryGetValue("ParentLayout", out var parentLayout))
     {
         Layout = (string)parentLayout;
@@ -9,21 +12,29 @@
     }
 }
 
-<h2>Manage your account</h2>
+<h2></h2>
+<div class="col-12">
+    <div class="card">
 
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
+        <div class="card-body">
+            <h4 class="card-title">@Localizer["Manage your account"]</h4>
+            <div>
+                <h4>@Localizer["Change your account settings"]</h4>
+                <hr />
+                <div class="row">
+                    <div class="col-md-3">
+                        <partial name="_ManageNav" />
+                    </div>
+                    <div class="col-md-9">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    @RenderSection("Scripts", required: false)
-}
+
+            @section Scripts {
+                @RenderSection("Scripts", required: false)
+            }

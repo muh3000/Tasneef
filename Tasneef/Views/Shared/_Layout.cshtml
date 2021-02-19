@@ -2,10 +2,13 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
-
+@using Tasneef.Data
+@using Microsoft.AspNetCore.Http;
+@using System.Security.Claims;
 
 @inject IHtmlLocalizer<SharedResource> Localizer
-
+@inject ApplicationDbContext context
+@inject IHttpContextAccessor httpContextAccessor
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>
     ();
@@ -13,6 +16,9 @@
     string dir = "ltr";
     if (lang == "ar")
         dir = "rtl";
+
+    var _userID = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    var notifications = context.Notifications.Where(n => n.UserId == _userID && n.Read == false).OrderByDescending(n=>n.CreatedDate);
 }
 
 <!DOCTYPE html>
@@ -49,36 +55,92 @@
     <div id="main-wrapper">
         <header class="topbar">
             <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="~/">
+                    <a class="navbar-brand" href="index.html">
                         <!-- Logo icon --><b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <h3>@Localizer["Tasneef"]</h3>
-                            @*<img src="~/images/logo-site.png" alt="homepage" class="dark-logo" />
-                                <!-- Light Logo icon -->
-                                <img src="~/images/logo-site.png" alt="homepage" class="light-logo" style="width:150px;" />*@
+                            <img src="../assets/images/logo-icon.png" alt="homepage" class="dark-logo">
+                            <!-- Light Logo icon -->
+                            <img src="../assets/images/logo-light-icon.png" alt="homepage" class="light-logo">
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text --><span>
                             <!-- dark Logo text -->
-                            @*<img src="~/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
-                                <!-- Light Logo text -->
-                                <img src="~/assets/images/logo-light-text.png" class="light-logo" alt="homepage" />*@
+                            <img src="../assets/images/logo-text.png" alt="homepage" class="dark-logo">
+                            <!-- Light Logo text -->
+                            <img src="../assets/images/logo-light-text.png" class="light-logo" alt="homepage">
                         </span>
                     </a>
                 </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
                 <div class="navbar-collapse">
-
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
                     <ul class="navbar-nav mr-auto">
                         <!-- This is  -->
                         <li class="nav-item"> <a class="nav-link nav-toggler d-block d-md-none waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
                         <li class="nav-item"> <a class="nav-link sidebartoggler d-none d-lg-block d-md-block waves-effect waves-dark" href="javascript:void(0)"><i class="icon-menu"></i></a> </li>
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
                         <li class="nav-item">
-
+                            <form class="app-search d-none d-md-block d-lg-block">
+                                <input type="text" class="form-control" placeholder="Search &amp; enter">
+                            </form>
                         </li>
                     </ul>
+                    <!-- ============================================================== -->
+                    <!-- User profile and search -->
+                    <!-- ============================================================== -->
                     <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Comment -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="ti-email"></i>
+                                @if (notifications.Count() > 0)
+                                {
+                                    <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                                }
+                            </a>
+                            <<div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown">
+                                <ul>
+                                    <li>
+                                        <div class="drop-title">@Localizer.GetString("Notifications")</div>
+                                    </li>
+                                    <li>
+                                        <div class="message-center ps ps--theme_default" data-ps-id="efad2bd4-0bb1-9b03-5867-204ea62b9c30">
+                                            <!-- Message -->
+                                            @foreach (var notify in notifications)
+                                            {
+                                                <a href="/@notify.Entity/Details/@notify.EntityId">
+                                                    <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
+                                                    <div class="mail-contnet">
+                                                        <h5>@Localizer.GetString(notify.Entity) </h5> <span class="mail-desc">@notify.Title</span> <span class="time">@notify.CreatedDate.ToShortDateString()</span>
+                                                    </div>
+                                                </a>
+                                            }
+
+                                            <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps__scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__scrollbar-y-rail" style="top: 0px; right: -6px;"><div class="ps__scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-center link" href="javascript:void(0);"> <strong>@Localizer.GetString("Check all notifications")</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+
+
                     </ul>
                 </div>
             </nav>
@@ -121,7 +183,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a class="waves-effect waves-dark" >
+                            <a class="waves-effect waves-dark">
                                 <i class="icon-user"></i>
                                 <span class="hide-menu">@Localizer.GetString("Users")</span>
                             </a>
@@ -146,7 +208,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a class="waves-effect waves-dark" >
+                            <a class="waves-effect waves-dark">
                                 <i class="icons-Project"></i>
                                 <span class="hide-menu">@Localizer.GetString("Projects")</span>
                             </a>
@@ -195,11 +257,30 @@
                                         </span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a asp-area="" asp-controller="EmailConfigurations" asp-action="Index">
+                                        <i class="icon-list"></i>
+                                        <span class="hide-menu">
+                                            @Localizer.GetString("Email Configuration")
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a asp-area="" asp-controller="WebServices" asp-action="ShutdownSite">
+                                        <i class="icon-list"></i>
+                                        <span class="hide-menu">
+                                            @Localizer.GetString("Restart App")
+                                        </span>
+                                    </a>
+
+
+                                </li>
                             </ul>
                         </li>
 
                         <li>
-                            <a class="waves-effect waves-dark" >
+                            <a class="waves-effect waves-dark">
                                 <i class="icons-Upload-toCloud"></i>
                                 <span class="hide-menu">
                                     @Localizer.GetString("Uploads")
@@ -222,7 +303,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                
+
 
                             </ul>
 
@@ -352,11 +433,12 @@
     <script src="~/assets/node_modules/morrisjs/morris.min.js"></script>
     <script src="~/assets/node_modules/jquery-sparkline/jquery.sparkline.min.js"></script>
     <!-- Popup message jquery -->
-    <script src="~/assets/node_modules/toast-master/js/jquery.toast.js"></script>
+    
+
     <!-- Chart JS -->
     <script src="~/dist/js/dashboard1.js"></script>
-    <script src="~/assets/node_modules/toast-master/js/jquery.toast.js"></script>
 
+    <!---->
     <script src="~/assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js"></script>
     <script src="~/dist/js/pages/chat.js"></script>
 
@@ -373,12 +455,12 @@
 
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>*@
+
+
     @RenderSection("Scripts", required: false)
-
-
 </body>
 
 </html>

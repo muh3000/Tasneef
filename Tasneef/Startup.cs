@@ -17,7 +17,12 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
+
 using Tasneef.Utilities;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Tasneef.Services;
+using Tasneef.Core.Interfaces;
+using Tasneef.Core.Services;
 
 namespace Tasneef
 {
@@ -25,7 +30,7 @@ namespace Tasneef
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration; 
         }
 
         public IConfiguration Configuration { get; }
@@ -76,8 +81,11 @@ namespace Tasneef
                 opts.SupportedUICultures = supportedCultures;
             });
 
-
-
+            services.AddTransient<IEmailSender, Mailer>();
+            //services.AddTransient<ApplicationDbContext>();
+            services.AddHostedService<AppHostedService>();
+            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<IUserPermit, UserPermitService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -140,7 +148,7 @@ namespace Tasneef
             }
 
 
-            AppUser user = await UserManager.FindByEmailAsync("mohammad.alnasser@jci.com");
+            AppUser user = await UserManager.FindByEmailAsync("muh3000@gmail.com");
             if (user == null)
             {
                 user = new AppUser()
@@ -157,15 +165,32 @@ namespace Tasneef
 
 
 
-            string[] settingKeys = { };
+            string[] settingKeys = {"test" };
             foreach (var item in settingKeys)
                 if (!_context.AppSettings.Any(s => s.SettingKey == item))
                 {
                     AppSetting s = new AppSetting();
                     s.SettingKey = item;
-                    _context.Add(s);
+                    await _context.AddAsync(s);
                     await _context.SaveChangesAsync();
                 }
+
+            List<ProjectStatus> statusList = new List<ProjectStatus>()
+                {
+                    new ProjectStatus() { Removable = false, Name = "Active" } ,
+                    new ProjectStatus() { Removable = false, Name = "Closed" },
+                    new ProjectStatus() { Removable = false, Name = "Canceled" }
+
+                };
+            foreach (var item in statusList)
+                if (!_context.ProjectStatuses.Any(p => p.Name == item.Name))
+                {
+                    await _context.Database.ExecuteSqlCommandAsync("SET IDENTITY_INSERT ProjectStatuses ON;");
+                    _context.Add(item);
+                    _context.SaveChanges();
+                    await _context.Database.ExecuteSqlCommandAsync("SET IDENTITY_INSERT ProjectStatuses OFF;");
+                }
+
 
         }
     }

@@ -1,28 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Tasneef.Core.Interfaces;
 using Tasneef.Data;
 using Tasneef.Models;
 
 namespace Tasneef.Controllers
 {
+    [Authorize(Roles = "Admin,Manager,Employee")]
     public class CustomerMemosController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public CustomerMemosController(ApplicationDbContext context)
+        private string _userID;
+        private readonly IUserPermit _userPermit;
+        public CustomerMemosController(ApplicationDbContext context, IUserPermit userPermit, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _userID = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            _userPermit = userPermit;
         }
 
         // GET: CustomerMemoes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.CustomerMemos.Include(c => c.CreatedBy).Include(c => c.Customer).Include(c => c.Memo).Include(c => c.Subscription).Include(c => c.UpdatedBy);
+            var applicationDbContext = _context.CustomerMemos
+                .Include(c => c.CreatedBy)
+                .Include(c => c.Customer)
+                .Include(c => c.Memo)
+                .Include(c => c.Subscription)
+                .Include(c => c.UpdatedBy);
+                //.Where(async c => await _userPermit.HasPermitOnCustomerAsync(c.CustomerId));
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -45,6 +60,7 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
+            if (!await _userPermit.HasPermitOnCustomerAsync(customerMemo.CustomerId)) return NotFound();
 
             return View(customerMemo);
         }
@@ -67,12 +83,19 @@ namespace Tasneef.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CustomerId,IsRead,ReadDate,SubscriptionId,MemoId,CreatedById,CreatedDate,UpdatedById,UpdatedDate")] CustomerMemo customerMemo)
         {
+
             if (ModelState.IsValid)
             {
-                _context.Add(customerMemo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (await _userPermit.HasPermitOnCustomerAsync(customerMemo.CustomerId))
+                {
+                    _context.Add(customerMemo);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                    ViewData["Error"] = "User has No access grant on this customer";
             }
+            
             ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", customerMemo.CreatedById);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", customerMemo.CustomerId);
             ViewData["MemoId"] = new SelectList(_context.Memos, "Id", "Id", customerMemo.MemoId);
@@ -94,6 +117,9 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
+            
+            if (! await _userPermit.HasPermitOnCustomerAsync(customerMemo.CustomerId)) return NotFound();
+
             ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", customerMemo.CreatedById);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", customerMemo.CustomerId);
             ViewData["MemoId"] = new SelectList(_context.Memos, "Id", "Id", customerMemo.MemoId);
@@ -116,23 +142,28 @@ namespace Tasneef.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (await _userPermit.HasPermitOnCustomerAsync(customerMemo.CustomerId))
                 {
-                    _context.Update(customerMemo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerMemoExists(customerMemo.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(customerMemo);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!CustomerMemoExists(customerMemo.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                else
+                    ViewData["Error"] = "User has No access grant on this customer";
             }
             ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", customerMemo.CreatedById);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", customerMemo.CustomerId);
@@ -161,6 +192,9 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
+            if (! await _userPermit.HasPermitOnCustomerAsync(customerMemo.CustomerId)) {
+                return NotFound();
+            }
 
             return View(customerMemo);
         }
@@ -170,10 +204,16 @@ namespace Tasneef.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customerMemo = await _context.CustomerMemos.FindAsync(id);
-            _context.CustomerMemos.Remove(customerMemo);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (await _userPermit.HasPermitOnCustomerAsync(id))
+            {
+                var customerMemo = await _context.CustomerMemos.FindAsync(id);
+                _context.CustomerMemos.Remove(customerMemo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+                ViewData["Error"] = "User has No access grant on this customer";
+            return View(nameof(Delete), new { id = id });
         }
 
         private bool CustomerMemoExists(int id)

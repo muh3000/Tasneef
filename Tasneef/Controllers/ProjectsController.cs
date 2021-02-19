@@ -13,7 +13,7 @@ using Tasneef.Models;
 
 namespace Tasneef.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager")]
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;

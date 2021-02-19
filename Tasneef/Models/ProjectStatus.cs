@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Tasneef.Models
 {
-    public class ProjectStatus:AuditableEntity
+    public class ProjectStatus
     {
         public int Id { set; get; }
         public string Name { get; set; }

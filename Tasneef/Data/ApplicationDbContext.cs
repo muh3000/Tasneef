@@ -36,8 +36,11 @@ namespace Tasneef.Data
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Memo> Memos { get; set; }
         public DbSet<CustomerMemo> CustomerMemos { get; set; }
-
+        public DbSet<EmailConfiguration> EmailConfigurations { get; set; }
         public DbSet<AuditTrail> AuditTrails { set; get; }
+        public DbSet<Notification> Notifications { set; get; }
+
+        public DbSet<EmployeeCustomerGrant> EmployeeCustomerGrants { set; get; }
         public override int  SaveChanges()
         {
             //var task = Task.Run(async () => {

@@ -11,7 +11,7 @@ using Tasneef.Models;
 
 namespace Tasneef.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager")]
     public class ProjectStatusController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,7 +24,7 @@ namespace Tasneef.Controllers
         // GET: ProjectStatus
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ProjectStatuses.Include(p => p.CreatedBy).Include(p => p.UpdatedBy);
+            var applicationDbContext = _context.ProjectStatuses;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -37,8 +37,6 @@ namespace Tasneef.Controllers
             }
 
             var projectStatus = await _context.ProjectStatuses
-                .Include(p => p.CreatedBy)
-                .Include(p => p.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (projectStatus == null)
             {
@@ -51,8 +49,7 @@ namespace Tasneef.Controllers
         // GET: ProjectStatus/Create
         public IActionResult Create()
         {
-            ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id");
-            ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id");
+            
             return View();
         }
 
@@ -69,8 +66,7 @@ namespace Tasneef.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", projectStatus.CreatedById);
-            ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id", projectStatus.UpdatedById);
+            
             return View(projectStatus);
         }
 
@@ -87,8 +83,7 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", projectStatus.CreatedById);
-            ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id", projectStatus.UpdatedById);
+            
             return View(projectStatus);
         }
 
@@ -124,8 +119,7 @@ namespace Tasneef.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id", projectStatus.CreatedById);
-            ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id", projectStatus.UpdatedById);
+            
             return View(projectStatus);
         }
 
@@ -138,8 +132,6 @@ namespace Tasneef.Controllers
             }
 
             var projectStatus = await _context.ProjectStatuses
-                .Include(p => p.CreatedBy)
-                .Include(p => p.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (projectStatus == null)
             {
@@ -155,8 +147,12 @@ namespace Tasneef.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var projectStatus = await _context.ProjectStatuses.FindAsync(id);
-            _context.ProjectStatuses.Remove(projectStatus);
-            await _context.SaveChangesAsync();
+            if (projectStatus.Removable)
+            {
+                _context.ProjectStatuses.Remove(projectStatus);
+                await _context.SaveChangesAsync();
+                
+            }
             return RedirectToAction(nameof(Index));
         }
 
