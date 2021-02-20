@@ -60,7 +60,7 @@ namespace Tasneef.Controllers
             {
                 return NotFound();
             }
-            if (!await _userPermit.HasPermitOnCustomerAsync(customerMemo.CustomerId)) return NotFound();
+            if (!await _userPermit.HasPermitOnCustomerAsync(customerMemo.CustomerId)) return Unauthorized();
 
             return View(customerMemo);
         }

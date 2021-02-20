@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Tasneef.Core.Interfaces;
 using Tasneef.Data;
 using Tasneef.Models;
 
@@ -15,22 +16,30 @@ namespace Tasneef.Controllers
     public class MessagesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public MessagesController(ApplicationDbContext context)
+        private readonly IUserPermit _userPermit;
+        public MessagesController(ApplicationDbContext context, IUserPermit userPermit)
         {
             _context = context;
+
+
+            _userPermit = userPermit;
         }
 
         // GET: Messages
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Messages.Include(m => m.CreatedBy).Include(m => m.Project).Include(m => m.UpdatedBy);
+            var custList = await _userPermit.GetPermittedCustomersAsync();
+
+            var applicationDbContext = _context.Messages.Include(m => m.CreatedBy).Include(m => m.Project).Include(m => m.UpdatedBy)
+                .Where(m=> custList.Contains( m.Project.CustomerId) );
             return View(await applicationDbContext.ToListAsync());
         }
 
         public async Task<IActionResult> Chat()
         {
-            var projects = await _context.Projects.Where(p=> p.ProjectStatusId == 1 ).Include(p=>p.Messages).Include(p=>p.Customer).Include(p=>p.CreatedBy).ToListAsync<Project>();
+            var custList = await _userPermit.GetPermittedCustomersAsync();
+
+            var projects = await _context.Projects.Where(p=> p.ProjectStatusId == 1 && custList.Contains( p.CustomerId) ).Include(p=>p.Messages).Include(p=>p.Customer).Include(p=>p.CreatedBy).ToListAsync<Project>();
             return View(projects);
         }
 

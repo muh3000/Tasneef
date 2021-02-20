@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Tasneef.Core.Interfaces;
 using Tasneef.Data;
 using Tasneef.Models;
 
@@ -19,10 +20,12 @@ namespace Tasneef.Controllers
     {
         private readonly ApplicationDbContext _context;
         string _userID;
-        public MessagesApiController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly IUserPermit _userPermit;
+        public MessagesApiController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, IUserPermit userPermit)
         {
             _context = context;
             _userID = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            _userPermit = userPermit;
         }
 
         // GET: api/MessagesApi
@@ -47,7 +50,8 @@ namespace Tasneef.Controllers
         public async Task<ActionResult<IEnumerable<Message>>> GetMessages(int id)
         {
             var x = await _context.AppUsers.ToListAsync();
-            List<Message> messages = await _context.Messages.Include(m => m.CreatedBy).Where(m => m.ProjectId == id).ToListAsync();
+            var custList = await _userPermit.GetPermittedCustomersAsync();
+            List<Message> messages = await _context.Messages.Include(m => m.CreatedBy).Where(m => m.ProjectId == id &&  custList.Contains(m.Project.CustomerId)).ToListAsync();
             var xd = x.Count;
             return messages;
         }
@@ -90,6 +94,9 @@ namespace Tasneef.Controllers
         [HttpPost]
         public async Task<ActionResult<Message>> PostMessage(Message message)
         {
+            var customerId = (await _context.Projects.FirstOrDefaultAsync(p => p.Id == message.ProjectId)).CustomerId;
+            if (!await _userPermit.HasPermitOnCustomerAsync(customerId)) return Unauthorized();
+
             message.CreatedById = _userID;
             message.CreatedDate = DateTime.Now;
             _context.Messages.Add(message);
