@@ -22,19 +22,51 @@ namespace Tasneef.Controllers
         private readonly IEmailSender _emailSender;
         private readonly INotificationService _notificationService;
         private string _userID;
-        public MemosController(ApplicationDbContext context, IEmailSender emailSender, INotificationService notificationService,IHttpContextAccessor httpContextAccessor)
+        private readonly IUserPermit _userPermit;
+
+        public MemosController(ApplicationDbContext context, IEmailSender emailSender, INotificationService notificationService,IHttpContextAccessor httpContextAccessor, IUserPermit userPermit)
         {
             _context = context;
             _emailSender = emailSender;
             _notificationService = notificationService;
             _userID = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            _userPermit = userPermit;
         }
 
         // GET: Memos
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Memos.Include(m => m.CreatedBy).Include(m => m.UpdatedBy);
+            var applicationDbContext = _context.Memos
+                .Include(m => m.CreatedBy)
+                .Include(m => m.UpdatedBy)
+                ;
+
+
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        
+        public async Task<IActionResult> MyMemos()
+        {
+            
+
+            var customerUser = await _context.CustomerUsers.FirstOrDefaultAsync(u => u.UserId == _userID);
+            List<int> memos = null;
+            if (customerUser != null)
+            {
+                memos = _context.CustomerMemos.Where(m => m.CustomerId == customerUser.CustomerId).Select(x => x.MemoId).ToList();
+            }
+            else
+                return View(_context.Memos.Where(x=>x.Id == -1));
+            var applicationDbContext = _context.Memos
+                .Include(m => m.CreatedBy)
+                .Include(m => m.UpdatedBy)
+                .Where(m => memos.Contains(m.Id));
+
+
+            return View(await applicationDbContext.ToListAsync());
+
         }
 
         // GET: Memos/Details/5
@@ -49,15 +81,32 @@ namespace Tasneef.Controllers
                 .Include(m => m.CreatedBy)
                 .Include(m => m.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (memo == null)
             {
                 return NotFound();
             }
+            var customerUser = await _context.CustomerUsers.FirstOrDefaultAsync(u => u.UserId == _userID);
+
+            if (await _userPermit.IsInRoleAsync("Customer"))
+            {
+                if (customerUser != null)
+                {
+                    if (! await _context.CustomerMemos.AnyAsync(c => c.MemoId == memo.Id && c.CustomerId == customerUser.CustomerId))
+                        return Unauthorized();
+                }
+                else return Unauthorized();
+                    
+            }
+                
+
+
+            // mark as read and remove notification 
             var notifications = await _notificationService.GetNotificationsListAsync();
             var notify =  notifications.FirstOrDefault(n => n.Entity == "Memos" && n.EntityId == memo.Id.ToString() && n.UserId == _userID);
             if (notify!=null)
                 await _notificationService.MarkNotificationAsReadAsync(notify);
-            var customerUser = await _context.CustomerUsers.FirstOrDefaultAsync(u => u.UserId == _userID);
+            
             if (customerUser != null) {
                 var customerMemo = await _context.CustomerMemos.FirstOrDefaultAsync(c => c.MemoId == memo.Id && c.CustomerId == customerUser.CustomerId && c.IsRead == false );
                 if (customerMemo != null)
@@ -72,6 +121,7 @@ namespace Tasneef.Controllers
         }
 
         // GET: Memos/Create
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public IActionResult Create()
         {
             ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id");
@@ -84,10 +134,12 @@ namespace Tasneef.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admin,Manager,Employee")]
         public async Task<IActionResult> Create([Bind("Id,Title,Body,CreatedById,CreatedDate,UpdatedById,UpdatedDate")] Memo memo)
         {
             if (ModelState.IsValid)
             {
+                
                 _context.Add(memo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -120,6 +172,7 @@ namespace Tasneef.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Body,CreatedById,CreatedDate,UpdatedById,UpdatedDate")] Memo memo)
         {
             if (id != memo.Id)
@@ -153,6 +206,7 @@ namespace Tasneef.Controllers
         }
 
         // GET: Memos/Delete/5
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -175,6 +229,7 @@ namespace Tasneef.Controllers
         // POST: Memos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var memo = await _context.Memos.FindAsync(id);
@@ -189,12 +244,13 @@ namespace Tasneef.Controllers
         }
 
 
-
-        public IActionResult CreateCustomerMemos()
+        [Authorize(Roles = "Admin,Manager,Employee")]
+        public async Task<IActionResult> CreateCustomerMemosAsync()
         {
             ViewData["CreatedById"] = new SelectList(_context.AppUsers, "Id", "Id");
             ViewData["UpdatedById"] = new SelectList(_context.AppUsers, "Id", "Id");
-            ViewData["Customers"] = new MultiSelectList(_context.Customers.Where(c=>c.Subscriptions.Any(s=>s.EndDate >= DateTime.Now)), "Id", "Name");
+            var custList = await _userPermit.GetPermittedCustomersAsync();
+            ViewData["Customers"] = new MultiSelectList(_context.Customers.Where(c=>c.Subscriptions.Any(s=>s.EndDate >= DateTime.Now) && custList.Contains( c.Id)), "Id", "Name");
             return View();
         }
 
@@ -203,14 +259,19 @@ namespace Tasneef.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager,Employee")]
         public async Task<IActionResult> CreateCustomerMemos(Memo memo,int[] customersList)
         {
             if (ModelState.IsValid)
             {
+                
+
                 _context.Add(memo);
                 await _context.SaveChangesAsync();
                 foreach(var customer in customersList)
                 {
+                    if (await _userPermit.IsInRoleAsync("Employee"))
+                        if (!await _userPermit.HasPermitOnCustomerAsync(customer)) continue;
                     CustomerMemo cusomerMemo = new CustomerMemo()
                     {
                         CustomerId = customer,

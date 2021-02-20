@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Tasneef.Core.Interfaces;
 using Tasneef.Data;
 using Tasneef.Models;
 
@@ -21,24 +22,31 @@ namespace Tasneef.Controllers
         private readonly ApplicationDbContext _context;
         private readonly string _userID;
         private IHostingEnvironment _hostingEnvironment;
+        private readonly IUserPermit _userPermit;
 
-        public UploadsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, IHostingEnvironment hostingEnvironment)
+        public UploadsController(ApplicationDbContext context, IUserPermit userPermit , IHttpContextAccessor httpContextAccessor, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _userID = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             _hostingEnvironment = hostingEnvironment;
+            _userPermit = userPermit;
         }
 
         // GET: Uploads
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Uploads
+            IQueryable<Upload> applicationDbContext = _context.Uploads
                 .Include(u => u.CreatedBy)
                 .Include(u => u.Customer)
                 .Include(u => u.Message)
                 .Include(u => u.Project)
                 .Include(u => u.UpdatedBy);
-                //.Where(u=>u.CustomerId);
+
+            var customers = await  _userPermit.GetPermittedCustomersAsync();
+            var inCusRole = await _userPermit.IsInRoleAsync("Customer");
+            if(inCusRole)
+                applicationDbContext = applicationDbContext.Where(u => customers.Contains(u.CustomerId.Value ));
+            
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -52,10 +60,16 @@ namespace Tasneef.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadFile(int id,IFormFile file)
         {
+            
 
-            
             Upload upload = await _context.Uploads.FindAsync(id);
-            
+
+            if(await _userPermit.IsInRoleAsync("Customer") || await _userPermit.IsInRoleAsync("Employee")) 
+                if (!await _userPermit.HasPermitOnCustomerAsync(upload.CustomerId.Value)) return Unauthorized();
+
+
+
+
             if (file != null)
             {
                 DeleteFile(upload.FilePath, "Uploads");
@@ -159,6 +173,9 @@ namespace Tasneef.Controllers
         public async Task<IActionResult> Create(Upload upload,IFormFile file)
         {
             //var savedFileName = "";
+            if (await _userPermit.IsInRoleAsync("Customer") || await _userPermit.IsInRoleAsync("Employee"))
+                if (!await _userPermit.HasPermitOnCustomerAsync(upload.CustomerId.Value)) return Unauthorized();
+
             string savedFileName = "";
             if (file!= null)
                 savedFileName = await UploadFileAsync(file, "Uploads") ;
@@ -282,6 +299,8 @@ namespace Tasneef.Controllers
                 .Include(u => u.Project)
                 .Include(u => u.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            if (await _userPermit.IsInRoleAsync("Customer") || await _userPermit.IsInRoleAsync("Employee"))
+                if (!await _userPermit.HasPermitOnCustomerAsync(upload.CustomerId.Value)) return Unauthorized();
             if (upload == null)
             {
                 return NotFound();
@@ -296,6 +315,8 @@ namespace Tasneef.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var upload = await _context.Uploads.FindAsync(id);
+            if (await _userPermit.IsInRoleAsync("Customer") || await _userPermit.IsInRoleAsync("Employee"))
+                if (!await _userPermit.HasPermitOnCustomerAsync(upload.CustomerId.Value)) return Unauthorized();
             if (upload.FilePath.Length > 0)
             {
                 DeleteFile(upload.FilePath, "Uploads");

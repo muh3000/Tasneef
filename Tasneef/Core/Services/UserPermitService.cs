@@ -43,5 +43,45 @@ namespace Tasneef.Core.Services
             return AdminUser || EmpHasGrant || CustUser;
 
         }
+
+        public async Task<bool> IsInRoleAsync(string Role)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == _userID);
+            bool inRole = false;
+            if (user != null)
+            {
+                inRole = await _userManager.IsInRoleAsync(user, Role);
+            }
+
+            return inRole;
+        }
+
+        public async Task<List<int>> GetPermittedCustomersAsync()
+        {
+            IQueryable<Customer> customers =null;//= _context.Customers;
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == _userID);
+            if (user != null) 
+                if (await _userManager.IsInRoleAsync(user, "Employee"))
+                {
+                    var custIds = _context.EmployeeCustomerGrants.Where(e => e.EmployeeId == _userID).Select(c => c.CustomerId);
+                    customers = _context.Customers.Where(c => custIds.Contains(c.Id));
+                }
+                else if(await _userManager.IsInRoleAsync(user, "Customer"))
+                {
+                    var custIds = _context.CustomerUsers.Where(e => e.UserId == _userID).Select(c => c.CustomerId);
+                    customers = _context.Customers.Where(c => custIds.Contains(c.Id));
+                }
+                else if (await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager"))
+                {
+                    customers = _context.Customers;
+                }
+            
+
+            return customers.Select(c => c.Id).ToList();
+
+
+        }
+
+        
     }
 }
