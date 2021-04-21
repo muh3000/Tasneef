@@ -20,11 +20,13 @@ namespace Tasneef.Controllers
         private readonly ApplicationDbContext _context;
         private string _userID;
         private readonly IUserPermit _userPermit;
-        public CustomerMemosController(ApplicationDbContext context, IUserPermit userPermit, IHttpContextAccessor httpContextAccessor)
+        private readonly INotificationService _notificationService;
+        public CustomerMemosController(ApplicationDbContext context, IUserPermit userPermit, IHttpContextAccessor httpContextAccessor,INotificationService notificationService)
         {
             _context = context;
             _userID = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             _userPermit = userPermit;
+            _notificationService = notificationService;
         }
 
         // GET: CustomerMemoes
@@ -188,6 +190,8 @@ namespace Tasneef.Controllers
                 .Include(c => c.Subscription)
                 .Include(c => c.UpdatedBy)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
             if (customerMemo == null)
             {
                 return NotFound();
@@ -206,7 +210,10 @@ namespace Tasneef.Controllers
         {
             if (await _userPermit.HasPermitOnCustomerAsync(id))
             {
-                var customerMemo = await _context.CustomerMemos.FindAsync(id);
+                var customerMemo = await _context.CustomerMemos.Include(c=>c.Customer).FirstAsync(c=>c.Id == id);
+
+                await _notificationService.DeleteCustomerNotificationsAsync("Memos", customerMemo.MemoId.ToString(), customerMemo.Customer);
+
                 _context.CustomerMemos.Remove(customerMemo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -14,39 +14,49 @@
 
             <h3>
                 @Localizer["Are you sure you want to delete this?"]</h3>
-                        <div>
+            <div>
+                <hr />
+                <dl class="row">
 
-                            <dl class="row">
+                    <dt class="col-sm-2">
+                        @Localizer["Form?"]
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.IsForm)
+                    </dd>
 
-                                <dt class="col-sm-2">
-                                    @Localizer["Form?"]
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.IsForm)
-                                </dd>
+                    @if (!Model.IsForm)
+                    {
+                        <dt class="col-sm-2">
+                            @Localizer["Customer"]
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Model.Customer?.Name
+                        </dd>
+                    }
+                    <dt class="col-sm-2">
+                        @Localizer["Tag"]
+                    </dt>
 
-                                <dt class="col-sm-2">
-                                    @Localizer["Tag"]
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.Tag)
-                                </dd>
-                                <dt class="col-sm-2">
-                                    @Localizer["File"]
-                                </dt>
-                                <dd class="col-sm-10">
-                                    @Html.DisplayFor(model => model.FilePath)
-                                </dd>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Tag)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Localizer["File"]
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.FilePath)
+                    </dd>
 
 
-                            </dl>
+                </dl>
 
-                            <form asp-action="Delete">
-                                <input type="hidden" asp-for="Id" />
-                                <input type="submit" value="@Localizer["Delete"]" class="btn btn-danger" /> |
-                                <a asp-action="Index">@Localizer["Back to List"]</a>
-                            </form>
-                        </div>
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="submit" value="@Localizer["Delete"]" class="btn btn-danger" /> |
+                    <a asp-action="Index">@Localizer["Back to List"]</a>
+                </form>
+            </div>
 </div>
     </div>
 </div>

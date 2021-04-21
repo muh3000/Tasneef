@@ -1,34 +1,41 @@
 ﻿@model Tasneef.Models.EmployeeCustomerGrant
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = Localizer["Create"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
 
-<h4>EmployeeCustomerGrant</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="EmployeeId" class="control-label"></label>
-                <select asp-for="EmployeeId" class ="form-control" asp-items="ViewBag.EmployeeId"></select>
+            <h4>@Localizer["Employee Responsibilities"]</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="EmployeeId" class="control-label">@Localizer["Employee"]</label>
+                            <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CustomerId" class="control-label">@Localizer["Customer"]</label>
+                            <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="@Localizer["Create"]" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+
+            <div>
+                <a asp-action="Index">@Localizer["Back to List"]</a>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

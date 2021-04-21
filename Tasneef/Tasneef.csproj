@@ -3133,7 +3133,6 @@
     <Folder Include="Pages\" />
     <Folder Include="Resources\Controllers\" />
     <Folder Include="wwwroot\css\" />
-    <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 

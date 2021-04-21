@@ -147,6 +147,12 @@ namespace Tasneef.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
+
+            if(await _context.Projects.AnyAsync(p=>p.CustomerId== customer.Id))
+            {
+                ViewData["Error"] = "Cannot Delete Customer. Projects already exist for this customer.";
+                return View(nameof(Delete), customer);
+            }
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

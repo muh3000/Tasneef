@@ -22,9 +22,7 @@
                         <th>
                             @Localizer["Title"]
                         </th>
-                        <th>
-                            @Localizer["Body"]
-                        </th>
+                        
                         
                         <th></th>
                     </tr>
@@ -36,9 +34,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Title)
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Body)
-                            </td>
+                            
                             
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.Id">@Localizer["Edit"]</a> |

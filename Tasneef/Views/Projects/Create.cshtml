@@ -28,7 +28,18 @@
 
                 <div class="form-group">
                     <label asp-for="ProjectStatusId" class="control-label">@Localizer["Status"]</label>
-                    <select asp-for="ProjectStatusId" class="form-control" asp-items="ViewBag.ProjectStatusId"></select>
+                    <select asp-for="ProjectStatusId" class="form-control" >
+                        <option value="">@Localizer["Select"]</option>
+                        @foreach(ProjectStatus item in ViewBag.ProjectStatusId)
+                        {
+                            
+                            <option value="@item.Id" 
+                                    
+                                    
+                                    >@Localizer[item.Name]</option>
+                        }
+
+                    </select>
                 </div>
 
                 <div class="form-group">

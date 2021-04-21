@@ -40,7 +40,10 @@
                                 @Localizer.GetString("Customer")
                             </label>
 
-                            <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.Customers"></select>
+                            <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.Customers">
+                                <option value="">@Localizer["Select"]</option>
+
+                            </select>
                         </div>
 
                         <div class="form-group">

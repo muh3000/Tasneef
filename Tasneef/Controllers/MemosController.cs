@@ -233,6 +233,9 @@ namespace Tasneef.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var memo = await _context.Memos.FindAsync(id);
+            foreach (var customerMemo in _context.CustomerMemos.Include(c=>c.Customer).Where(m=>m.MemoId == memo.Id).ToList()) {
+                await _notificationService.DeleteCustomerNotificationsAsync("Memos", memo.Id.ToString(), customerMemo.Customer);
+            }
             _context.Memos.Remove(memo);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -280,7 +283,7 @@ namespace Tasneef.Controllers
                     };
                     _context.Add(cusomerMemo);
                     await _context.SaveChangesAsync();
-                    Customer cust = await _context.Customers.Include(c=>c.CustomerUsers).FirstAsync(c=>c.Id == customer);
+                    Customer cust = await _context.Customers.Include(c=>c.CustomerUsers).Include("CustomerUsers.User").FirstAsync(c=>c.Id == customer);
                     await _notificationService.CreateCustomerNotificationsAsync("Memos", memo.Id.ToString(), cust, memo.Title);
                     await SendNotificationEmailAsync(cust, "New Memeo from Tasneef", "Please login to system to check the new Memo");
 

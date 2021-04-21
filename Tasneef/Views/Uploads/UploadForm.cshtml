@@ -6,7 +6,10 @@
         ViewData["Title"] = Localizer["Uploading File"];
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
+<style>
 
+    
+</style>
 
     <div class="col-12">
         <div class="card">
@@ -23,8 +26,11 @@
                                 @Html.DisplayFor(model => model.Tag)
                             </div>
                             <div class="form-group">
-
-                                <input type="file" name="file" />
+                                
+                                    
+                                    <input type="file" id="fileupload" name="file" />
+                                
+                                
                             </div>
                             <div class="form-group">
                                 <input type="submit" value="@Localizer["Save"]" class="btn btn-primary" />

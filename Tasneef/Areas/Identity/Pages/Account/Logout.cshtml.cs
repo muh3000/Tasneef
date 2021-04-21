@@ -27,6 +27,7 @@ namespace Tasneef.Areas.Identity.Pages.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+            Response.Redirect("../../");
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)

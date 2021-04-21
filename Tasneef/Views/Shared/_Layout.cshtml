@@ -5,10 +5,12 @@
 @using Tasneef.Data
 @using Microsoft.AspNetCore.Http;
 @using System.Security.Claims;
+@using Tasneef.Core.Interfaces;
 
 @inject IHtmlLocalizer<SharedResource> Localizer
 @inject ApplicationDbContext context
 @inject IHttpContextAccessor httpContextAccessor
+@inject IUserPermit userPermit
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>
     ();
@@ -32,6 +34,7 @@
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="~/assets/images/favicon.png">
     <title>Tasneef</title>
+
     <link href="~/assets/node_modules/morrisjs/morris.css" rel="stylesheet">
     <link href="~/assets/node_modules/toast-master/css/jquery.toast.css" rel="stylesheet">
     <link href="~/dist/css/style.min.css" rel="stylesheet">
@@ -43,6 +46,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css" />
 </head>
 
 <body class="skin-blue fixed-layout">
@@ -63,16 +68,16 @@
                         <!-- Logo icon --><b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <img src="../assets/images/logo-icon.png" alt="homepage" class="dark-logo">
+                            <img src="/images/logo-site-icon-small.png" alt="homepage" class="dark-logo">
                             <!-- Light Logo icon -->
-                            <img src="../assets/images/logo-light-icon.png" alt="homepage" class="light-logo">
+                            <img src="/images/logo-site-icon-small.png" alt="homepage" class="light-logo">
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text --><span>
                             <!-- dark Logo text -->
-                            <img src="../assets/images/logo-text.png" alt="homepage" class="dark-logo">
+                            <img src="/images/logo-site-text-small.png" alt="homepage" class="dark-logo">
                             <!-- Light Logo text -->
-                            <img src="../assets/images/logo-light-text.png" class="light-logo" alt="homepage">
+                            <img src="/images/logo-site-text-small.png" class="light-logo" alt="homepage">
                         </span>
                     </a>
                 </div>
@@ -91,9 +96,7 @@
                         <!-- Search -->
                         <!-- ============================================================== -->
                         <li class="nav-item">
-                            <form class="app-search d-none d-md-block d-lg-block">
-                                <input type="text" class="form-control" placeholder="Search &amp; enter">
-                            </form>
+
                         </li>
                     </ul>
                     <!-- ============================================================== -->
@@ -156,82 +159,104 @@
                                 <i class="icon-speedometer"></i><span class="hide-menu">@Localizer.GetString("Home")</span>
                             </a>
                         </li>
-                        <li>
-                            <a class="waves-effect waves-dark" sp-area="">
-                                <i class="icon-user"></i>
-                                <span class="hide-menu">
-                                    @Localizer.GetString("Customers")
-                                </span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li>
-                                    <a asp-area="" asp-controller="Customers" asp-action="Index">
-                                        <i class="icons-Bulleted-List"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Customers List")
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-controller="Customers" asp-action="Create">
-                                        <i class="icons-Add"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Create Customer")
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect waves-dark">
-                                <i class="icon-user"></i>
-                                <span class="hide-menu">@Localizer.GetString("Users")</span>
-                            </a>
 
-                            <ul aria-expanded="false" class="collapse">
-                                <li>
-                                    <a asp-area="" asp-controller="Users" asp-action="Index">
-                                        <i class="icons-Bulleted-List"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Users List")
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-controller="Users" asp-action="Create">
-                                        <i class="icons-Add-User"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Create User")
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect waves-dark">
-                                <i class="icons-Project"></i>
-                                <span class="hide-menu">@Localizer.GetString("Projects")</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li>
-                                    <a asp-area="" asp-controller="Projects" asp-action="Index">
-                                        <i class="icons-Bulleted-List"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Projects List")
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-controller="Projects" asp-action="Create">
-                                        <i class="icons-Add-Window"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Create Project")
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
+                        @if (await userPermit.IsInRoleAsync("Admin") || await userPermit.IsInRoleAsync("Manager"))
+                        {
+                            <li>
+                                <a class="waves-effect waves-dark" sp-area="">
+                                    <i class="icon-user"></i>
+                                    <span class="hide-menu">
+                                        @Localizer.GetString("Customers")
+                                    </span>
+                                </a>
+                                <ul aria-expanded="false" class="collapse">
+                                    <li>
+                                        <a asp-area="" asp-controller="Customers" asp-action="Index">
+                                            <i class="icons-Bulleted-List"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Customers List")
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-controller="Customers" asp-action="Create">
+                                            <i class="icons-Add"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Create Customer")
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-controller="EmployeeCustomerGrants" asp-action="Index">
+                                            <i class="icons-Add"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Employee Responsibilities")
+                                            </span>
+                                        </a>
+                                    </li>
 
-                        </li>
+                                </ul>
+                            </li>
+
+
+
+
+
+
+                            <li>
+                                <a class="waves-effect waves-dark">
+                                    <i class="icon-user"></i>
+                                    <span class="hide-menu">@Localizer.GetString("Users")</span>
+                                </a>
+
+                                <ul aria-expanded="false" class="collapse">
+                                    <li>
+                                        <a asp-area="" asp-controller="Users" asp-action="Index">
+                                            <i class="icons-Bulleted-List"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Users List")
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-controller="Users" asp-action="Create">
+                                            <i class="icons-Add-User"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Create User")
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+
+                            <li>
+                                <a class="waves-effect waves-dark">
+                                    <i class="icons-Project"></i>
+                                    <span class="hide-menu">@Localizer.GetString("Projects")</span>
+                                </a>
+                                <ul aria-expanded="false" class="collapse">
+                                    <li>
+                                        <a asp-area="" asp-controller="Projects" asp-action="Index">
+                                            <i class="icons-Bulleted-List"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Projects List")
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-controller="Projects" asp-action="Create">
+                                            <i class="icons-Add-Window"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Create Project")
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                        }
                         <li>
                             <a class="waves-effect waves-dark" asp-area="" asp-controller="Messages" asp-action="Chat">
                                 <i class="icons-Mail"></i>
@@ -240,45 +265,46 @@
                                 </span>
                             </a>
                         </li>
+                        @if (await userPermit.IsInRoleAsync("Admin") || await userPermit.IsInRoleAsync("Manager"))
+                        {
+                            <li>
+                                <a class="waves-effect waves-dark">
+                                    <i class="icons-Gears"></i>
+                                    <span class="hide-menu">
+                                        @Localizer.GetString("Settings")
+                                    </span>
+                                </a>
+                                <ul aria-expanded="false" class="collapse">
+                                    <li>
+                                        <a asp-area="" asp-controller="ProjectStatus" asp-action="Index">
+                                            <i class="icon-list"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Project Status")
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-controller="EmailConfigurations" asp-action="Details">
+                                            <i class="icon-list"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Email Configuration")
+                                            </span>
+                                        </a>
+                                    </li>
 
-                        <li>
-                            <a class="waves-effect waves-dark">
-                                <i class="icons-Gears"></i>
-                                <span class="hide-menu">
-                                    @Localizer.GetString("Settings")
-                                </span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li>
-                                    <a asp-area="" asp-controller="ProjectStatus" asp-action="Index">
-                                        <i class="icon-list"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Project Status")
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-controller="EmailConfigurations" asp-action="Index">
-                                        <i class="icon-list"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Email Configuration")
-                                        </span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a asp-area="" asp-controller="WebServices" asp-action="ShutdownSite">
-                                        <i class="icon-list"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Restart App")
-                                        </span>
-                                    </a>
+                                    <li>
+                                        <a asp-area="" asp-controller="WebServices" asp-action="ShutdownSite">
+                                            <i class="icon-list"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Restart App")
+                                            </span>
+                                        </a>
 
 
-                                </li>
-                            </ul>
-                        </li>
-
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                         <li>
                             <a class="waves-effect waves-dark">
                                 <i class="icons-Upload-toCloud"></i>
@@ -295,30 +321,34 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a asp-area="" asp-controller="Uploads" asp-action="Create">
-                                        <i class="icon-list"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Create")
-                                        </span>
-                                    </a>
-                                </li>
+                                @if (await userPermit.IsInRoleAsync("Admin") || await userPermit.IsInRoleAsync("Manager") || await userPermit.IsInRoleAsync("Employee"))
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Uploads" asp-action="Create">
+                                            <i class="icon-list"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Create")
+                                            </span>
+                                        </a>
+                                    </li>
 
-
+                                }
                             </ul>
 
 
                         </li>
 
-
-                        <li>
-                            <a class="waves-effect waves-dark" asp-area="" asp-controller="Subscriptions" asp-action="Index">
-                                <i class="icons-Upload-toCloud"></i>
-                                <span class="hide-menu">
-                                    @Localizer.GetString("Subscriptions")
-                                </span>
-                            </a>
-                        </li>
+                        @if (await userPermit.IsInRoleAsync("Admin") || await userPermit.IsInRoleAsync("Manager"))
+                        {
+                            <li>
+                                <a class="waves-effect waves-dark" asp-area="" asp-controller="Subscriptions" asp-action="Index">
+                                    <i class="icons-Upload-toCloud"></i>
+                                    <span class="hide-menu">
+                                        @Localizer.GetString("Subscriptions")
+                                    </span>
+                                </a>
+                            </li>
+                        }
                         <li>
                             <a class="waves-effect waves-dark">
                                 <i class="icons-Upload-toCloud"></i>
@@ -327,49 +357,57 @@
                                 </span>
                             </a>
                             <ul aria-expanded="false" class="collapse">
-                                <li>
-                                    <a asp-area="" asp-controller="Memos" asp-action="Index">
-                                        <i class="icons-Bulleted-List"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Memos List")
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-area="" asp-controller="Memos" asp-action="MyMemos">
-                                        <i class="icons-Bulleted-List"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Memos List")
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="waves-effect waves-dark" asp-area="" asp-controller="CustomerMemos" asp-action="Index">
-                                        <i class="icons-Upload-toCloud"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Customer Memos")
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="waves-effect waves-dark" asp-area="" asp-controller="Memos" asp-action="CreateCustomerMemos">
-                                        <i class="icons-Upload-toCloud"></i>
-                                        <span class="hide-menu">
-                                            @Localizer.GetString("Create Customer Memos")
-                                        </span>
-                                    </a>
-                                </li>
+                                @if (await userPermit.IsInRoleAsync("Customer"))
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Memos" asp-action="MyMemos">
+                                            <i class="icons-Bulleted-List"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Memos List")
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (await userPermit.IsInRoleAsync("Admin") || await userPermit.IsInRoleAsync("Manager") || await userPermit.IsInRoleAsync("Employee"))
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Memos" asp-action="Index">
+                                            <i class="icons-Bulleted-List"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Memos List")
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="waves-effect waves-dark" asp-area="" asp-controller="CustomerMemos" asp-action="Index">
+                                            <i class="icons-Upload-toCloud"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Customer Memos")
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="waves-effect waves-dark" asp-area="" asp-controller="Memos" asp-action="CreateCustomerMemos">
+                                            <i class="icons-Upload-toCloud"></i>
+                                            <span class="hide-menu">
+                                                @Localizer.GetString("Create Customer Memos")
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
                             </ul>
 
                         </li>
+                        @if (await userPermit.IsInRoleAsync("Admin") || await userPermit.IsInRoleAsync("Manager"))
+                        {
 
-
-                        <li>
-                            <a class="waves-effect waves-dark" asp-area="Identity" asp-controller="AuditTrails" asp-action="Index">
-                                <i class="far fa-circle text-success"></i>
-                                <span class="hide-menu">@Localizer.GetString("Audit Trails")</span>
-                            </a>
-                        </li>
+                            <li>
+                                <a class="waves-effect waves-dark" asp-area="Identity" asp-controller="AuditTrails" asp-action="Index">
+                                    <i class="far fa-circle text-success"></i>
+                                    <span class="hide-menu">@Localizer.GetString("Audit Trails")</span>
+                                </a>
+                            </li>
+                        }
                         <li>
                             <a class="waves-effect waves-dark" asp-area="Identity" asp-page="/Account/Logout" aria-expanded="false">
                                 <i class="far fa-circle text-success"></i>
@@ -421,7 +459,12 @@
             </div>
         </footer>
     </div>
-    <script src="~/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    @*<script src="~/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>*@
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+
+
     <!-- Bootstrap popper Core JavaScript -->
     <script src="~/assets/node_modules/popper/popper.min.js"></script>
     <script src="~/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -441,23 +484,19 @@
     <script src="~/assets/node_modules/morrisjs/morris.min.js"></script>
     <script src="~/assets/node_modules/jquery-sparkline/jquery.sparkline.min.js"></script>
     <!-- Popup message jquery -->
-    
-
     <!-- Chart JS -->
-    <script src="~/dist/js/dashboard1.js"></script>
-
     <!---->
     <script src="~/assets/node_modules/sticky-kit-master/dist/sticky-kit.min.js"></script>
     <script src="~/dist/js/pages/chat.js"></script>
+    @*<script src="~/dist/js/dashboard1.js"></script>*@
 
 
 
 
 
 
-
-
-
+    
+    
 
 
 

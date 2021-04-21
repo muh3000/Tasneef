@@ -8,38 +8,77 @@
 
 
 
-@foreach (var item in Model)
-{
-    <div class="col-lg-4">
+
+    <div class="col-12">
         <div class="card">
             <div class="card-body">
-                @Localizer["Project"]: @item.Name
-                <br />
-                @Html.DisplayFor(modelItem => item.Customer.Name)
-                <br />
-                <div>@Localizer["Start Date"] </div>
-
-                @item.StartDate.ToString("MM/dd/yyyy")
-                <br />
-                @if ((item.ClosedDate != null) && (item.ClosedDate != DateTime.MinValue))
-                {
-                    <div>Close Date:</div>
-                    @item.ClosedDate?.ToString("MM/dd/yyyy")
-                }
-
-            <br /><br />
 
 
 
-                <a class="btn btn-primary waves-effect waves-light" asp-action="Edit" asp-route-id="@item.Id">@Localizer["Edit"]</a>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Localizer["Project"]
+                            </th>
+                            <th>
+                                @Localizer["Customer"]
+                            </th>
+                            <th>
+                                @Localizer["Start Date"]
+                            </th>
+                            <th>
+                                @Localizer["End Date"]
+                            </th>
+                            <th>
+                                @Localizer["Status"]
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Customer.Name)
+                                </td>
+                                <td>
+                                    @item.StartDate.ToString("MM/dd/yyyy")
+                                </td>
+                                <td>
+                                    @if ((item.ClosedDate != null) && (item.ClosedDate != DateTime.MinValue))
+                                    {
+                                        
+                                        @item.ClosedDate?.ToString("MM/dd/yyyy")
+                                    }
+                                </td>
+                                <td>
+                                    @Localizer[item.ProjectStatus==null?"": item.ProjectStatus.Name]
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary waves-effect waves-light" asp-action="Edit" asp-route-id="@item.Id">@Localizer["Edit"]</a>
 
 
 
-                <a class="btn btn-warning" asp-action="Delete" asp-route-id="@item.Id">@Localizer["Delete"]</a>
+                                    <a class="btn btn-warning" asp-action="Delete" asp-route-id="@item.Id">@Localizer["Delete"]</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                   
+
+
+
+                    
 
 
             </div>
         </div>
     </div>
-}
+
 

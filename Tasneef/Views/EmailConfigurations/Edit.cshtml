@@ -1,62 +1,78 @@
 ﻿@model Tasneef.Models.EmailConfiguration
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
+
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = Localizer["Edit"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="col-12">
+    <div class="card">
 
-<h1>Edit</h1>
+        <div class="card-body">
+            
 
-<h4>EmailConfiguration</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="FromEmail" class="control-label"></label>
-                <input asp-for="FromEmail" class="form-control" />
-                <span asp-validation-for="FromEmail" class="text-danger"></span>
+            <h4>@Localizer["Email Configuration"]</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="form-group">
+                            <label for="FromEmail">@Localizer["From Email"]</label>
+                            <input asp-for="FromEmail" class="form-control" />
+
+                            <span asp-validation-for="FromEmail" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            
+                            @Localizer["Sender Name"]
+                            <input asp-for="SenderName" class="form-control" />
+                            <span asp-validation-for="SenderName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            
+                            @Localizer["SMTP Uername"]
+                            <input asp-for="SMTPUername" class="form-control" />
+                            <span asp-validation-for="SMTPUername" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            
+                            @Localizer["SMTP Password"]
+                            <input asp-for="SMTPPassword" class="form-control" type="password" />
+                            <span asp-validation-for="SMTPPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            @Localizer["SMTP Server"]
+                            <input asp-for="SMTPServer" class="form-control" />
+                            <span asp-validation-for="SMTPServer" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            @Localizer["SMTP Port"]
+                            <input asp-for="SMTPPort" class="form-control" />
+                            <span asp-validation-for="SMTPPort" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check">
+                            <input class="form-check-input" asp-for="EnableSSL" />
+                            <label class="form-check-label" asp-for="EnableSSL">
+                                @Localizer["Enable SSL"]
+                            </label>
+
+
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="@Localizer["Save"]" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="SenderName" class="control-label"></label>
-                <input asp-for="SenderName" class="form-control" />
-                <span asp-validation-for="SenderName" class="text-danger"></span>
+
+            <div>
+                <a asp-action="Details">@Localizer["Back"]</a>
             </div>
-            <div class="form-group">
-                <label asp-for="SMTPUername" class="control-label"></label>
-                <input asp-for="SMTPUername" class="form-control" />
-                <span asp-validation-for="SMTPUername" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SMTPPassword" class="control-label"></label>
-                <input asp-for="SMTPPassword" class="form-control" />
-                <span asp-validation-for="SMTPPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SMTPServer" class="control-label"></label>
-                <input asp-for="SMTPServer" class="form-control" />
-                <span asp-validation-for="SMTPServer" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SMTPPort" class="control-label"></label>
-                <input asp-for="SMTPPort" class="form-control" />
-                <span asp-validation-for="SMTPPort" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EnableSSL" /> @Html.DisplayNameFor(model => model.EnableSSL)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

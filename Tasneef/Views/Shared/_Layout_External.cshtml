@@ -1,4 +1,8 @@
-﻿
+﻿@inject IHtmlLocalizer<SharedResource> Localizer
+
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,34 +31,38 @@
     <![endif]-->
 </head>
 
-<body class="skin-default card-no-border">
+<body class="skin-blue fixed-layout">
     <!-- ============================================================== -->
     <!-- Preloader - style you can find in spinners.css -->
     <!-- ============================================================== -->
     <div class="preloader">
         <div class="loader">
             <div class="loader__figure"></div>
-            <p class="loader__label">Elite admin</p>
+            <p class="loader__label">Tasneef</p>
         </div>
     </div>
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <section id="wrapper">
-        
+
+
+
+
+
+
+        @RenderBody()
 
 
 
         
-            
-            @RenderBody()
-            
-        
-
-
 
     </section>
+   
 
+
+
+    
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
@@ -90,6 +98,8 @@
 
 
 
+
+
 </body>
 
 </html>
@@ -98,4 +108,3 @@
 
 
 
-</html>

@@ -29,7 +29,7 @@ namespace Tasneef.Controllers
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Projects.Include(p => p.CreatedBy).Include(p => p.Customer).Include(p => p.UpdatedBy);
+            var applicationDbContext = _context.Projects.Include(p => p.CreatedBy).Include(p => p.Customer).Include(p => p.UpdatedBy).Include(p=>p.ProjectStatus);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -59,7 +59,9 @@ namespace Tasneef.Controllers
         {
             
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
-            ViewData["ProjectStatusId"] = new SelectList(_context.ProjectStatuses, "Id", "Name");
+            ViewData["ProjectStatusId"] = new SelectList(_context.ProjectStatuses, "Id", "Name").Items;
+            
+
             return View();
         }
 

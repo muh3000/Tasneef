@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Active" xml:space="preserve">
+    <value>مفعل</value>
+  </data>
+  <data name="Active Projects" xml:space="preserve">
+    <value>مشاريع مفعلة</value>
+  </data>
+  <data name="Active Subscriptions" xml:space="preserve">
+    <value>إشتراكات مفعلة</value>
+  </data>
   <data name="Admin" xml:space="preserve">
     <value>مشرف</value>
   </data>
@@ -126,11 +135,17 @@
   <data name="Audit Trails" xml:space="preserve">
     <value>نشاط المستخدمين</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>الرجوع</value>
+  </data>
   <data name="Back to List" xml:space="preserve">
     <value>العودة إلى القائمة</value>
   </data>
   <data name="Body" xml:space="preserve">
     <value>المحتوى</value>
+  </data>
+  <data name="Canceled" xml:space="preserve">
+    <value>ملغي</value>
   </data>
   <data name="Change Date" xml:space="preserve">
     <value>تاريخ التعديل</value>
@@ -153,8 +168,14 @@
   <data name="Check all notifications" xml:space="preserve">
     <value>عرض جميع التنبيهات</value>
   </data>
+  <data name="Click here" xml:space="preserve">
+    <value>إضغط هنا</value>
+  </data>
   <data name="Close Date" xml:space="preserve">
     <value>تاريخ الإغلاق</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>مغلق</value>
   </data>
   <data name="Confirm new password" xml:space="preserve">
     <value>تأكيد كلمة المرور الجديدة</value>
@@ -259,13 +280,22 @@
     <value>البريد الإلكتروني</value>
   </data>
   <data name="Email Configuration" xml:space="preserve">
-    <value>إعدادات الأس أم تي بي</value>
+    <value>إعدادات لـ SMTP</value>
   </data>
   <data name="Employee" xml:space="preserve">
     <value>موظف</value>
   </data>
+  <data name="Employee Responsibilities" xml:space="preserve">
+    <value>مسؤوليات الموظفين</value>
+  </data>
+  <data name="Enable SSL" xml:space="preserve">
+    <value>تفعيل SSL</value>
+  </data>
   <data name="End Date" xml:space="preserve">
     <value>لغاية</value>
+  </data>
+  <data name="Enter your email" xml:space="preserve">
+    <value>ادخل بريدك الإلكتروني</value>
   </data>
   <data name="Field" xml:space="preserve">
     <value>الحقل</value>
@@ -273,17 +303,35 @@
   <data name="File" xml:space="preserve">
     <value>الملف</value>
   </data>
+  <data name="Forgot password confirmation" xml:space="preserve">
+    <value>تأكيد فقد كلمة المرور</value>
+  </data>
+  <data name="Forgot pwd?" xml:space="preserve">
+    <value>نسيت كلمة المرور</value>
+  </data>
+  <data name="Forgot your password?" xml:space="preserve">
+    <value>نسيت كلمة المرور الخاصة بك؟</value>
+  </data>
   <data name="Form?" xml:space="preserve">
     <value>نموذج؟</value>
   </data>
+  <data name="From Email" xml:space="preserve">
+    <value>البريد الإلكتروني للمرسل</value>
+  </data>
   <data name="Home" xml:space="preserve">
     <value>الرئيسية</value>
+  </data>
+  <data name="Home Page" xml:space="preserve">
+    <value>الصفحة الرئيسية</value>
   </data>
   <data name="Key Value" xml:space="preserve">
     <value>القيمة المفتاحية</value>
   </data>
   <data name="Language:" xml:space="preserve">
     <value>Language:</value>
+  </data>
+  <data name="Log In" xml:space="preserve">
+    <value>دخول</value>
   </data>
   <data name="Log Out" xml:space="preserve">
     <value>تسجيل الخروج</value>
@@ -336,6 +384,12 @@
   <data name="Password" xml:space="preserve">
     <value>كلمة المرور</value>
   </data>
+  <data name="Pending Uploads" xml:space="preserve">
+    <value>ملفات تحتاج الى تحمل</value>
+  </data>
+  <data name="Please check your email to reset your password." xml:space="preserve">
+    <value>تم إرسال إجراءات إستعادة كلمة المرور إلى بريدك الإلكتروني</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>الملف الشخصي</value>
   </data>
@@ -357,8 +411,14 @@
   <data name="Read?" xml:space="preserve">
     <value>مقروء</value>
   </data>
+  <data name="Remember Me" xml:space="preserve">
+    <value>تذكرني</value>
+  </data>
   <data name="Removable" xml:space="preserve">
     <value>قابل للحذف</value>
+  </data>
+  <data name="Restart App" xml:space="preserve">
+    <value>إعادة التشغيل</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>الوظيفة</value>
@@ -369,14 +429,35 @@
   <data name="Select File" xml:space="preserve">
     <value>اختر الملف</value>
   </data>
+  <data name="Sender Name" xml:space="preserve">
+    <value>اسم المرسل</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>الإعدادات</value>
+  </data>
+  <data name="Sign In" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="SMTP Password" xml:space="preserve">
+    <value>كلمة المرور لـ SMTP</value>
+  </data>
+  <data name="SMTP Port" xml:space="preserve">
+    <value>المنفد لـ SMTP</value>
+  </data>
+  <data name="SMTP Server" xml:space="preserve">
+    <value>الخادم لـ SMTP</value>
+  </data>
+  <data name="SMTP Username" xml:space="preserve">
+    <value>اسم المستخدم لـ SMTP</value>
   </data>
   <data name="Start Date" xml:space="preserve">
     <value>تاريخ البدء</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>الحالة</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>ارسل</value>
   </data>
   <data name="Subscription" xml:space="preserve">
     <value>إشتراك</value>
@@ -392,6 +473,9 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>العنوان</value>
+  </data>
+  <data name="to login" xml:space="preserve">
+    <value>للدخول</value>
   </data>
   <data name="Update" xml:space="preserve">
     <value>تعديل</value>

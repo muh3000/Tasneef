@@ -103,7 +103,12 @@ namespace Tasneef.Controllers
             {
                 try
                 {
-                    _context.Update(projectStatus);
+                    var projectStatusDb = await _context.ProjectStatuses.FindAsync(projectStatus.Id);
+                    if(projectStatusDb.Removable)
+                    {
+                        projectStatusDb.Name = projectStatus.Name;
+                    }
+                    _context.Update(projectStatusDb);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

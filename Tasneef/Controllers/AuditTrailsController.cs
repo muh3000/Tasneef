@@ -45,7 +45,12 @@ namespace Tasneef.Controllers
             return View(auditTrail);
         }
 
+        public async Task<IActionResult> GetData()
+        {
+            return new JsonResult(_context.AuditTrails.ToList());
+        }
+
         // GET: AuditTrails/Create
-        
+
     }
 }

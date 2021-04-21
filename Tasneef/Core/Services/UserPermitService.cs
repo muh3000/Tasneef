@@ -10,18 +10,21 @@ using Tasneef.Data;
 using Microsoft.EntityFrameworkCore;
 using Tasneef.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tasneef.Core.Services
 {
+    [Authorize]
     public class UserPermitService : IUserPermit
     {
         private readonly ApplicationDbContext _context;
         private string _userID;
         private readonly UserManager<AppUser> _userManager;
+
         public UserPermitService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor,UserManager<AppUser> userManager)
         {
             _context = context;
-            _userID = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            _userID = httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             _userManager = userManager;
 
         }

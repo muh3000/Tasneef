@@ -18,5 +18,7 @@ namespace Tasneef.Core.Interfaces
         Task MarkNotificationAsReadAsync(Notification item);
         Task<int> CreateCustomerNotificationsAsync(String Entity, String EntityId, Customer customer, string Title);
 
+        Task<int> DeleteCustomerNotificationsAsync(String Entity, String EntityId, Customer customer);
     }
 }
+

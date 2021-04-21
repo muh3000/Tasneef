@@ -39,7 +39,10 @@ namespace Tasneef.Controllers
         {
             var custList = await _userPermit.GetPermittedCustomersAsync();
 
-            var projects = await _context.Projects.Where(p=> p.ProjectStatusId == 1 && custList.Contains( p.CustomerId) ).Include(p=>p.Messages).Include(p=>p.Customer).Include(p=>p.CreatedBy).ToListAsync<Project>();
+            var projects = await _context.Projects.Where(p=> p.ProjectStatusId == 1 && custList.Contains( p.CustomerId) ).Include(p=>p.Messages).Include(p=>p.Customer)
+                .Include(p=>p.CreatedBy)
+                .OrderByDescending(p => p.Messages.OrderByDescending(t => t.CreatedDate).First().CreatedDate)
+                .ToListAsync<Project>();
             return View(projects);
         }
 

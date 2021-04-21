@@ -81,5 +81,26 @@ namespace Tasneef.Core.Services
 
             return 0;
         }
+
+        public async Task<int> DeleteCustomerNotificationsAsync(string Entity, string EntityId, Customer customer)
+        {
+            if (customer != null)
+            {
+
+                var customerUsersList = _context.CustomerUsers.Where(c => c.CustomerId == customer.Id);
+                foreach (var customerUser in customerUsersList)
+                {
+                    var notes = _context.Notifications.Where(n => n.Entity == Entity && n.EntityId == EntityId && n.UserId == customerUser.UserId);
+                    foreach (var item in notes)
+                    {
+                        _context.Notifications.Remove(item);
+                        
+                    }
+
+                }
+            }
+            await _context.SaveChangesAsync();
+            return 0;
+        }
     }
 }

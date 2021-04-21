@@ -1,61 +1,64 @@
 ﻿@page
 @model LoginModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Tasneef;
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 @{
-    
+
     Layout = "~/Views/Shared/_Layout_External.cshtml";
 }
 
 
 
-    <div class="login-register" style="background-image:url(~/assets/images/background/login-register.jpg);">
-        <div class="login-box card">
-            <div class="card-body">
-                <form class="form-horizontal form-material" id="account" method="post">
-                    <h3 class="text-center m-b-20">Sign In</h3>
-                    <div class="form-group ">
-                        <div class="col-xs-12">
-                            <input asp-for="Input.Email" class="form-control" />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        </div>
+<div class="login-register" style="background-image:url(~/assets/images/background/login-register.jpg);">
+    <div class="login-box card">
+        <div class="card-body">
+            <form class="form-horizontal form-material" id="account" method="post">
+                <h3 class="text-center m-b-20">@Localizer["Sign In"]</h3>
+                <div class="form-group ">
+                    <div class="col-xs-12">
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <input asp-for="Input.Password" class="form-control" />
-                            <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-md-12">
-                            <div class="d-flex no-block align-items-center">
-                                <div class="custom-control custom-checkbox">
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <div class="d-flex no-block align-items-center">
+                            <div class="custom-control custom-checkbox">
 
-                                    <input asp-for="Input.RememberMe" class="custom-control-input" id="customCheck1" />
-                                    <label class="custom-control-label" for="customCheck1">Remember me</label>
-                                </div>
-                                <div class="ml-auto">
-                                    <a id="forgot-password" class="text-muted" asp-page="./ForgotPassword"><i class="fas fa-lock m-r-5"></i> Forgot pwd?</a>
+                                <input asp-for="Input.RememberMe" class="custom-control-input" id="customCheck1" />
+                                <label class="custom-control-label" for="customCheck1">@Localizer["Remember me"]</label>
+                            </div>
+                            <div class="ml-auto">
+                                <a id="forgot-password" class="text-muted" asp-page="./ForgotPassword"><i class="fas fa-lock m-r-5"></i> @Localizer["Forgot pwd?"]</a>
 
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group text-center">
-                        <div class="col-xs-12 p-b-20">
-                            <button class="btn btn-block btn-lg btn-info btn-rounded" type="submit">Log In</button>
-                        </div>
+                </div>
+                <div class="form-group text-center">
+                    <div class="col-xs-12 p-b-20">
+                        <button class="btn btn-block btn-lg btn-info btn-rounded" type="submit">@Localizer["Log In"]</button>
                     </div>
-                    
-                    <div class="form-group m-b-0">
+                </div>
+
+                @*<div class="form-group m-b-0">
                         <div class="col-sm-12 text-center">
                             Don't have an account? <a href="/Identity/Account/Register" class="text-info m-l-5"><b>Sign Up</b></a>
                         </div>
-                    </div>
-                </form>
-                
-            </div>
+                    </div>*@
+            </form>
+
         </div>
     </div>
+</div>
 
 
 @section Scripts {

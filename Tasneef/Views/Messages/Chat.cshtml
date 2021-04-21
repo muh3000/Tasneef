@@ -15,9 +15,9 @@
             <div class="chat-left-aside">
                 <div class="open-panel"><i class="ti-angle-right"></i></div>
                 <div class="chat-left-inner" style="height: 617px;">
-                    <div class="form-material">
+                    @*<div class="form-material">
                         <input class="form-control p-2" type="text" placeholder="Search Contact">
-                    </div>
+                    </div>*@
                     <ul class="chatonline style-none ps ps--theme_default" data-ps-id="74c86ba9-43d6-6b6e-f09a-c13bc2d1cbb3" style="overflow: scroll;">
 
                         @foreach (var item in Model)
@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-4 text-right">
                             <button id="PostMessage" onclick="SendMessage()" type="button" class="btn btn-info btn-circle btn-lg"><i class="fas fa-paper-plane"></i> </button>
-                            <button id="PostMessage" onclick="SendMessage()" type="button" class="btn btn-info btn-circle btn-lg"><i class="fas fa-mail-bulk"></i> </button>
+                            @*<button id="PostMessage" onclick="SendMessage()" type="button" class="btn btn-info btn-circle btn-lg"><i class="fas fa-mail-bulk"></i> </button>*@
                         </div>
                         <div class="col-4 text-right">
 
@@ -131,6 +131,10 @@
             //alert(projectID);
             var messageBody = $("#MessageBody").val();
             //alert("OK POST" + projectID + " " + messageBody);
+
+            
+            if (messageBody == "")
+                return;
 
             var message = JSON.stringify(
                 {

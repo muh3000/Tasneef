@@ -48,6 +48,7 @@ namespace Tasneef.Services
                 //do what you need
 
                 var x = context.Customers.FirstOrDefault();
+                if(x!=null)
                 _logger.LogInformation("Timed Hosted Service is working. Name: {Count}", x.Name);  
             }
 

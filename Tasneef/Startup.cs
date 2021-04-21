@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Tasneef.Services;
 using Tasneef.Core.Interfaces;
 using Tasneef.Core.Services;
+using Newtonsoft.Json.Serialization;
 
 namespace Tasneef
 {
@@ -65,7 +66,8 @@ namespace Tasneef
                 .AddRazorRuntimeCompilation()
                 .AddViewLocalization(opts => { opts.ResourcesPath = "Resources"; })
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization();
+                .AddDataAnnotationsLocalization()
+               ;
 
             services.Configure<RequestLocalizationOptions>(opts => {
                 var supportedCultures = new List<CultureInfo> {
@@ -86,6 +88,9 @@ namespace Tasneef
             services.AddHostedService<AppHostedService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IUserPermit, UserPermitService>();
+            services.AddTransient<IDashboard, DashboardService>();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

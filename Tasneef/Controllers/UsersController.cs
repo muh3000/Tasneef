@@ -31,7 +31,7 @@ namespace Tasneef.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var usersList = _userManager.Users;
+            var usersList = _userManager.Users.ToList();
             List<AppUserVM> usersVMList = new List<AppUserVM>();
             foreach(var user in usersList)
             {

@@ -12,7 +12,7 @@ namespace Tasneef.Models
         public string Title { get; set; }
         public string Body  { get; set; }
 
-        
+        public List<CustomerMemo> CustomerMemos { set; get; }
 
 
     }

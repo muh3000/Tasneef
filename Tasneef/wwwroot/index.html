@@ -1,0 +1,126 @@
+<html>
+
+
+<head>
+
+    <title>Page Title</title>
+    <!--<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css" />
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+    <table id="myTable" class="display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th width="10%">["Change Date"]</th>
+                <th width="10%">
+                    ["Change Type"]
+                </th>
+                <th width="10%">["User"]</th>
+                <th width="10%">
+                    ["Model"]
+                </th>
+                <th width="10%">["Key Value"]</th>
+                <th width="10%">["Field"]</th>
+
+                <th width="10%">["Old Value"]</th>
+                <th width="10%">["New Value"]</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th width="10%">["Change Date"]</th>
+                <th width="10%">
+                    ["Change Type"]
+                </th>
+                <th width="10%">["User"]</th>
+                <th width="10%">
+                    ["Model"]
+                </th>
+                <th width="10%">["Key Value"]</th>
+                <th width="10%">["Field"]</th>
+
+                <th width="10%">["Old Value"]</th>
+                <th width="10%">["New Value"]</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <!--<tr>
+                <td>Row 1 Data 1</td>
+                <td>Row 1 Data 2</td>
+            </tr>
+            <tr>
+                <td>Row 2 Data 1</td>
+                <td>Row 2 Data 2</td>
+            </tr>-->
+            <tr><td>dd</td></tr>
+        </tbody>
+    </table>
+
+
+    
+
+
+    <script>
+        //alert('hi');
+        $(document).ready(function () {
+
+
+            $('#myTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                ajax: {
+                    url: '/AuditTrails/GetData',
+                    dataSrc: ''
+                }
+                ,
+                columns: [
+
+                    { data: 'auditDateTime' },
+                    { data: 'auditType' },
+                    { data: 'auditUser' },
+                    { data: 'tableName' },
+                    { data: 'keyValues' },
+                    { data: 'changedColumn' },
+                    { data: 'oldValue' },
+                    { data: 'newValue' },
+
+                ]
+
+
+            });
+
+        });
+        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary mr-1');
+    </script>
+
+
+
+</body>
+</html>
+
